@@ -29,8 +29,8 @@
                     <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                     <span class="hide-menu">KOST MANAGEMENT</span>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{route('kost')}}" aria-expanded="false">
+                <li class="sidebar-item {{ request()->routeIs('kost.*') ? 'selected' : '' }}">
+                    <a class="sidebar-link {{ request()->routeIs('kost.*') ? 'active' : '' }}" href="{{route('kost')}}" aria-expanded="false">
                         <span>
                             <i class="ti ti-home"></i>
                         </span>
