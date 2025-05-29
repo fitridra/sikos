@@ -29,16 +29,35 @@ class KostController extends Controller
     }
 
     public function create(Request $request)
-	{
+    {
 
-		$validatedData = $request->validate([
-			'kost_name' => 'required',
-			'address'   => 'required',
-			'amount'    => 'required'
-		]);
+        $validatedData = $request->validate([
+            'kost_name' => 'required',
+            'address'   => 'required',
+            'amount'    => 'required'
+        ]);
 
-		Kost::create($validatedData);
+        Kost::create($validatedData);
 
-		return redirect()->route('kost')->with('success', 'Data has been added successfully');
-	}
+        return redirect()->route('kost')->with('success', 'Data has been added successfully');
+    }
+
+    public function edit($id)
+    {
+        $kost = Kost::where('kost_id', $id)->first();
+        return view('kost/edit', compact('kost'));
+    }
+
+    public function update(Request $request, $id)
+    {
+
+        $kost = Kost::where('kost_id', $id)->first();
+        $kost->where('kost_id', $kost->kost_id)
+            ->update([
+                'kost_name' => $request->input('kost_name'),
+                'address'   => $request->input('address'),
+                'amount'    => $request->input('amount'),
+            ]);
+        return redirect()->route('kost')->with('success', 'Data has been updated successfully');
+    }
 }

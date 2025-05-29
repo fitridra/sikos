@@ -82,7 +82,7 @@
                                                 class="btn btn-secondary">
                                                 <i class="ti ti-alert-circle"></i>
                                             </a>
-                                            <a href="#" type="button" class="btn btn-warning">
+                                            <a href="{{ route('kost.edit', $kost->kost_id) }}" type="button" class="btn btn-warning">
                                                 <i class="ti ti-edit"></i>
                                             </a>
                                             <a href="#" type="button" class="btn btn-danger">
