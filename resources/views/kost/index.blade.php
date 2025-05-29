@@ -74,7 +74,7 @@
                                         <p class="fw-normal mb-0 ml-5 fs-4 text-center">{{ $kost->total_rooms }}</p>
                                     </td>
                                     <td class="border-bottom-0">
-                                        <p class="fw-normal mb-0 fs-4">{{ $kost->amount }}</p>
+                                        <p class="fw-normal mb-0 fs-4">{{ number_format($kost->amount, 0, ',', '.') }}</p>
                                     </td>
                                     <td class="border-bottom-0">
                                         <small>
