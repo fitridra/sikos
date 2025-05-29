@@ -30,7 +30,7 @@
                     <span class="hide-menu">KOST MANAGEMENT</span>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
+                    <a class="sidebar-link" href="{{route('kost')}}" aria-expanded="false">
                         <span>
                             <i class="ti ti-home"></i>
                         </span>
