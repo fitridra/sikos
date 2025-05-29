@@ -82,12 +82,42 @@
                                                 class="btn btn-secondary">
                                                 <i class="ti ti-alert-circle"></i>
                                             </a>
-                                            <a href="{{ route('kost.edit', $kost->kost_id) }}" type="button" class="btn btn-warning">
+                                            <a href="{{ route('kost.edit', $kost->kost_id) }}" type="button"
+                                                class="btn btn-warning">
                                                 <i class="ti ti-edit"></i>
                                             </a>
-                                            <a href="#" type="button" class="btn btn-danger">
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#confirmDeleteModal{{ $kost->kost_id }}">
                                                 <i class="ti ti-trash"></i>
-                                            </a>
+                                            </button>
+
+                                            <!-- Modal Delete-->
+                                            <div class="modal fade" id="confirmDeleteModal{{ $kost->kost_id }}"
+                                                tabindex="-1" aria-labelledby="deleteLabel{{ $kost->kost_id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="deleteLabel{{ $kost->kost_id }}">
+                                                                Delete Confirmation</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Are you sure you want to delete the
+                                                            <strong>{{ $kost->kost_name }}</strong>?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Cancel</button>
+                                                            @method('delete')
+                                                            @csrf
+                                                            <a href="{{ route('kost.delete', $kost->kost_id) }}"
+                                                                class="btn btn-danger">Delete</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </small>
                                     </td>
                                 </tr>
@@ -99,7 +129,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Add-->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

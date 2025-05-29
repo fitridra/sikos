@@ -60,4 +60,10 @@ class KostController extends Controller
             ]);
         return redirect()->route('kost')->with('success', 'Data has been updated successfully');
     }
+
+    public function delete($id)
+    {
+        Kost::where('kost_id', $id)->delete();
+        return redirect()->route('kost')->with('success', 'Data has been deleted successfully.');
+    }
 }
