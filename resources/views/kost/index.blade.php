@@ -72,7 +72,7 @@
                                     </td>
                                     <td class="border-bottom-0">
                                         <small>
-                                            <a href="#" type="button" class="btn btn-secondary">
+                                            <a href="{{ route('kost.detail', $kost->kost_id) }}" type="button" class="btn btn-secondary">
                                                 <i class="ti ti-alert-circle"></i>
                                             </a>
                                             <a href="#" type="button" class="btn btn-warning">

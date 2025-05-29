@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kost;
+use App\Models\Room;
 
 class KostController extends Controller
 {
@@ -18,5 +19,12 @@ class KostController extends Controller
         });
 
         return view('kost.index', compact('data_kost'));
+    }
+
+    public function show($id)
+    {
+        $kost = Kost::with('rooms')->findOrFail($id);
+
+        return view('kost.show', compact('kost'));
     }
 }
