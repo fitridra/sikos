@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Kost;
-use App\Models\Room;
 
 class KostController extends Controller
 {
@@ -27,4 +27,18 @@ class KostController extends Controller
 
         return view('kost.show', compact('kost'));
     }
+
+    public function create(Request $request)
+	{
+
+		$validatedData = $request->validate([
+			'kost_name' => 'required',
+			'address'   => 'required',
+			'amount'    => 'required'
+		]);
+
+		Kost::create($validatedData);
+
+		return redirect()->route('kost')->with('success', 'Data has been added successfully');
+	}
 }

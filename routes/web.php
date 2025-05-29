@@ -7,3 +7,5 @@ use App\Http\Controllers\KostController;
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/kost', [KostController::class, 'index'])->name('kost');
 Route::get('/kost/{id}', [KostController::class, 'show'])->name('kost.detail');
+Route::post('/kost/create', [KostController::class, 'create'])->name('kost.create');
+
