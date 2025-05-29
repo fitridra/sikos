@@ -61,14 +61,14 @@
                         <span class="hide-menu">Payments</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                {{-- <li class="sidebar-item">
                     <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
                         <span>
                             <i class="ti ti-file-description"></i>
                         </span>
                         <span class="hide-menu">Reports</span>
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </nav>
         <!-- End Sidebar navigation -->
