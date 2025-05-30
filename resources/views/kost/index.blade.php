@@ -9,11 +9,28 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-semibold mb-0">Data Kost</h5>
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
                             class="ti ti-plus"></i>&nbsp; Add Kost</a>
                 </div>
+                <form method="GET" action="{{ url()->current() }}">
+                    <div class="row mb-3">
+                        <div class="col-5 d-flex">
+                            <a href="{{ url()->current() }}" class="btn btn-outline-dark me-2">
+                                <i class="ti ti-refresh"></i>
+                            </a>
+                            <div class="input-group">
+                                <input name="cari" type="text" class="form-control" placeholder="Search..."
+                                    aria-label="search">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="ti ti-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
                 <div class="table-responsive">
                     <table class="table text-nowrap mb-0 align-middle">
                         <thead class="text-dark fs-4">
@@ -125,6 +142,13 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div class="pagging text-center">
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        {{ $data_kost->links() }}
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>

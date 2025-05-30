@@ -7,16 +7,22 @@ use App\Models\Kost;
 
 class KostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data_kost = Kost::with('rooms')->get();
+        $data_kost = Kost::with('rooms')
+            ->when($request->cari, function ($query) use ($request) {
+                $query->where('kost_name', 'LIKE', "%{$request->cari}%");
+            })
+            ->paginate(10);
 
-        $data_kost = $data_kost->map(function ($kost) {
+        $data_kost->getCollection()->transform(function ($kost) {
             $kost->total_rooms = $kost->rooms->count();
-            $kost->total_available = $kost->rooms->where('status', 0)->count(); // status 0 = available
-            $kost->total_filled = $kost->rooms->where('status', 1)->count();  // status 1 = filled
+            $kost->total_available = $kost->rooms->where('status', 0)->count();
+            $kost->total_filled = $kost->rooms->where('status', 1)->count();
             return $kost;
         });
+
+        $data_kost->appends($request->only('cari'));
 
         return view('kost.index', compact('data_kost'));
     }
