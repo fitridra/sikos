@@ -15,13 +15,14 @@
                             class="ti ti-plus"></i>&nbsp; Add Room</a>
                 </div>
                 <form method="GET" action="{{ url()->current() }}">
-                    <div class="row mb-3">
-                        <div class="col-md-1">
-                            <a href="{{ url()->current() }}" class="btn btn-outline-dark me-2">
+                    <div class="row g-3 mb-3">
+                        <div class="col-auto col-sm-2 col-md-1 d-flex align-items-center">
+                            <a href="{{ url()->current() }}" class="btn btn-outline-dark w-100">
                                 <i class="ti ti-refresh"></i>
                             </a>
                         </div>
-                        <div class="col-md-3">
+
+                        <div class="col-12 col-sm-5 col-md-3">
                             <select name="kost_id" class="form-select" onchange="this.form.submit()">
                                 <option value="">-- Filter by Kost --</option>
                                 @foreach ($all_kosts as $kost)
@@ -33,7 +34,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-12 col-sm-5 col-md-3">
                             <select name="status" class="form-select" onchange="this.form.submit()">
                                 <option value="">-- Filter by Status --</option>
                                 <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Available</option>
@@ -41,7 +42,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-12 col-md-5">
                             <div class="input-group">
                                 <input name="cari" type="text" class="form-control" placeholder="Search Room..."
                                     value="{{ request('cari') }}">
