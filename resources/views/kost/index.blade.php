@@ -16,16 +16,19 @@
                 </div>
                 <form method="GET" action="{{ url()->current() }}">
                     <div class="row mb-3">
-                        <div class="col-5 d-flex">
-                            <a href="{{ url()->current() }}" class="btn btn-outline-dark me-2">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <a href="{{ url()->current() }}" class="btn btn-outline-dark flex-shrink-0">
                                 <i class="ti ti-refresh"></i>
                             </a>
-                            <div class="input-group">
-                                <input name="cari" type="text" class="form-control" placeholder="Search..."
-                                    aria-label="search">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="ti ti-search"></i>
-                                </button>
+
+                            <div class="flex-grow-1">
+                                <div class="input-group">
+                                    <input name="cari" type="text" class="form-control" placeholder="Search..."
+                                        aria-label="search">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="ti ti-search"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
