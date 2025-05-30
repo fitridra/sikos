@@ -33,11 +33,9 @@
                             </div>
                             <div class="mb-3">
                                 <label for="exampleInputstatus1" class="form-label">Status</label>
-                                <select name="status" class="form-select" required>
-                                    <option value="" disabled>-- Status --</option>
-                                    <option value="0" {{ $room->status == 0 ? 'selected' : '' }}>Available</option>
-                                    <option value="1" {{ $room->status == 1 ? 'selected' : '' }}>Filled</option>
-                                </select>
+                                <input type="text" class="form-control"
+                                    value="{{ $room->status == 0 ? 'Available' : 'Filled' }}" readonly>
+                                <input type="hidden" name="status" value="{{ $room->status }}">
                             </div>
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary">Save</button>

@@ -186,13 +186,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="exampleInputstatus1" class="form-label">Status</label>
-                                    <select name="status" class="form-select" required>
-                                        <option value="" disabled>-- Status --</option>
-                                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Available
-                                        </option>
-                                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Filled
-                                        </option>
-                                    </select>
+                                    <input type="text" class="form-control" value="Available" readonly>
+                                    <input type="hidden" name="status" value="0">
                                 </div>
                                 <div class="text-end">
                                     <button type="submit" class="btn btn-primary">Save</button>
