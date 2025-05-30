@@ -15,13 +15,14 @@
                             class="ti ti-plus"></i>&nbsp; Add Member</a>
                 </div>
                 <form method="GET" action="{{ url()->current() }}">
-                    <div class="row mb-3">
-                        <div class="col-md-1">
-                            <a href="{{ url()->current() }}" class="btn btn-outline-dark me-2">
+                    <div class="row g-3 mb-3 align-items-center">
+                        <div class="col-auto">
+                            <a href="{{ url()->current() }}" class="btn btn-outline-dark">
                                 <i class="ti ti-refresh"></i>
                             </a>
                         </div>
-                        <div class="col-md-3">
+
+                        <div class="col-12 col-sm-6 col-md-3">
                             <select name="kost_id" class="form-select" onchange="this.form.submit()">
                                 <option value="">-- Filter by Kost --</option>
                                 @foreach ($allkosts as $kost)
@@ -33,7 +34,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-12 col-md-5">
                             <div class="input-group">
                                 <input name="cari" type="text" class="form-control" placeholder="Search..."
                                     value="{{ request('cari') }}">
