@@ -4,8 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KostController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\MemberController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+Route::get('/get-rooms/{kostId}', [MemberController::class, 'getRoomsByKost']);
 
 Route::get('/kost', [KostController::class, 'index'])->name('kost');
 Route::get('/kost/{id}', [KostController::class, 'show'])->name('kost.detail');
@@ -19,3 +22,9 @@ Route::post('/room/create', [RoomController::class, 'create'])->name('room.creat
 Route::get('/room/{id}', [RoomController::class, 'edit'])->name('room.edit');
 Route::post('/room/{id}', [RoomController::class, 'update'])->name('room.update');
 Route::get('/room/delete/{id}', [RoomController::class, 'delete'])->name('room.delete');
+
+Route::get('/member', [MemberController::class, 'index'])->name('member');
+Route::post('/member/create', [MemberController::class, 'create'])->name('member.create');
+Route::get('/member/{id}', [MemberController::class, 'edit'])->name('member.edit');
+Route::post('/member/{id}', [MemberController::class, 'update'])->name('member.update');
+Route::get('/member/delete/{id}', [MemberController::class, 'delete'])->name('member.delete');

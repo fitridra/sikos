@@ -45,8 +45,8 @@
                         <span class="hide-menu">Rooms</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="./ui-card.html" aria-expanded="false">
+                <li class="sidebar-item {{ request()->routeIs('member*') ? 'selected' : '' }}">
+                    <a class="sidebar-link {{ request()->routeIs('member*') ? 'active' : '' }}" href="{{route('member')}}" aria-expanded="false">
                         <span>
                             <i class="ti ti-users"></i>
                         </span>
