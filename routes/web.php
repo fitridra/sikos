@@ -33,6 +33,4 @@ Route::get('/member/delete/{id}', [MemberController::class, 'delete'])->name('me
 
 Route::get('/payment', [PaymentController::class, 'index'])->name('payment');
 Route::post('/payment/create', [PaymentController::class, 'create'])->name('payment.create');
-Route::get('/payment/{id}', [PaymentController::class, 'edit'])->name('payment.edit');
-Route::post('/payment/{id}', [PaymentController::class, 'update'])->name('payment.update');
-Route::get('/payment/delete/{id}', [PaymentController::class, 'delete'])->name('payment.delete');
+Route::get('/payment/{id}', [PaymentController::class, 'delete'])->name('payment.delete');
