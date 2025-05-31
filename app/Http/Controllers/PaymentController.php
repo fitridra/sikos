@@ -77,7 +77,7 @@ class PaymentController extends Controller
             ->exists();
 
         if ($exists) {
-            return back()->withErrors(['error' => 'Pembayaran untuk bulan dan tahun ini sudah dilakukan.']);
+            return back()->with('error', 'Payment for this month and year has already been made.');
         }
 
         Payment::create([

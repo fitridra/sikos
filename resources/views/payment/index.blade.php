@@ -9,6 +9,11 @@
                         {{ session('success') }}
                     </div>
                 @endif
+                @if (session('error'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('error') }}
+                    </div>
+                @endif
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-semibold mb-0">Data Payment</h5>
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
@@ -149,8 +154,8 @@
                                                             <h5 class="modal-title"
                                                                 id="deleteLabel{{ $payment->payment_id }}">
                                                                 Delete Confirmation</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             Are you sure you want to delete the payment
