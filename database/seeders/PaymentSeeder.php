@@ -13,7 +13,7 @@ class PaymentSeeder extends Seeder
         Payment::insert([
             [
                 'member_id'    => 1,
-                'payment_date' => $date = Carbon::now()->subDays(20)->toDateString(),
+                'payment_date' => $date = Carbon::parse('2025-05-10'),
                 'payment_month' => Carbon::parse($date)->month,
                 'payment_year'  => Carbon::parse($date)->year,
                 'amount'       => 1000000,
@@ -22,7 +22,7 @@ class PaymentSeeder extends Seeder
             ],
             [
                 'member_id'    => 2,
-                'payment_date' => $date = Carbon::now()->subDays(10)->toDateString(),
+                'payment_date' => $date = Carbon::parse('2025-05-13'),
                 'payment_month' => Carbon::parse($date)->month,
                 'payment_year'  => Carbon::parse($date)->year,
                 'amount'       => 1000000,
@@ -31,7 +31,7 @@ class PaymentSeeder extends Seeder
             ],
             [
                 'member_id'    => 3,
-                'payment_date' => $date = Carbon::now()->subDays(5)->toDateString(),
+                'payment_date' => $date = Carbon::parse('2025-05-20'),
                 'payment_month' => Carbon::parse($date)->month,
                 'payment_year'  => Carbon::parse($date)->year,
                 'amount'       => 1200000,

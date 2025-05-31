@@ -15,7 +15,7 @@ class MemberSeeder extends Seeder
             [
                 'full_name'     => 'Mawar Lestari',
                 'room_id'       => 2,
-                'move_in_date'  => Carbon::parse('2024-01-10'),
+                'move_in_date'  => Carbon::parse('2025-01-10'),
                 'move_out_date' => null,
                 'created_at'    => now(),
                 'updated_at'    => now(),
@@ -23,15 +23,15 @@ class MemberSeeder extends Seeder
             [
                 'full_name'     => 'Rina Kartika',
                 'room_id'       => 1,
-                'move_in_date'  => Carbon::parse('2024-03-01'),
-                'move_out_date' => Carbon::parse('2024-05-15'),
+                'move_in_date'  => Carbon::parse('2025-02-13'),
+                'move_out_date' => Carbon::parse('2025-05-15'),
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],
             [
                 'full_name'     => 'Budi Santoso',
                 'room_id'       => 5,
-                'move_in_date'  => Carbon::parse('2024-02-20'),
+                'move_in_date'  => Carbon::parse('2025-03-20'),
                 'move_out_date' => null,
                 'created_at'    => now(),
                 'updated_at'    => now(),
