@@ -38,7 +38,11 @@ class PaymentController extends Controller
 
         $data_payment->appends($request->only(['kost_id', 'cari', 'filter_year', 'filter_month']));
 
-        $all_members = Member::select('member_id', 'full_name')->get();
+        $all_members = Member::select('member_id', 'full_name')
+            ->where(function ($query) {
+                $query->whereNull('move_out_date')
+                    ->orWhereDate('move_out_date', '<=', now());
+            })->get();
 
         $allkosts = Kost::select('kost_id', 'kost_name')->get();
 
