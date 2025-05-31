@@ -30,11 +30,10 @@ class UnpaidController extends Controller
             })
             ->with('room.kost');
 
-        // Pagination 10 data per halaman
         $perPage = 10;
         $paginator = $membersQuery->paginate($perPage);
 
-        // Map data untuk menghitung months_unpaid & total_due
+        // menghitung months_unpaid & total_due
         $items = $paginator->getCollection()->map(function ($member) use ($today) {
             $kost = $member->room->kost;
 
@@ -51,7 +50,7 @@ class UnpaidController extends Controller
             ];
         });
 
-        // Update collection di paginator agar blade dapat data yang sudah dimapping
+        // Update collection di paginator
         $paginator->setCollection($items);
 
         // Hitung total unpaid dari data pada halaman ini
