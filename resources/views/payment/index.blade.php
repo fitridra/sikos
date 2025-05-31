@@ -17,14 +17,14 @@
                 <form method="GET" action="{{ url()->current() }}">
                     <div class="row g-3 mb-3 align-items-center">
                         <div class="col-auto">
-                            <a href="{{ url()->current() }}" class="btn btn-outline-dark">
+                            <a href="{{ url()->current() }}" class="btn btn-outline-dark" title="Reset Filter">
                                 <i class="ti ti-refresh"></i>
                             </a>
                         </div>
 
-                        <div class="col-12 col-sm-6 col-md-3">
+                        <div class="col-12 col-sm-6 col-md-2">
                             <select name="kost_id" class="form-select" onchange="this.form.submit()">
-                                <option value="">-- Filter by Kost --</option>
+                                <option value="">Kost</option>
                                 @foreach ($allkosts as $kost)
                                     <option value="{{ $kost->kost_id }}"
                                         {{ request('kost_id') == $kost->kost_id ? 'selected' : '' }}>
@@ -34,7 +34,32 @@
                             </select>
                         </div>
 
-                        <div class="col-12 col-md-5">
+                        <!-- Filter Bulan -->
+                        <div class="col-6 col-md-2">
+                            <select name="filter_month" class="form-select" onchange="this.form.submit()">
+                                <option value="">Bulan</option>
+                                @foreach (range(1, 12) as $month)
+                                    <option value="{{ $month }}"
+                                        {{ request('filter_month') == $month ? 'selected' : '' }}>
+                                        {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Filter Tahun -->
+                        <div class="col-6 col-md-2">
+                            <select name="filter_year" class="form-select" onchange="this.form.submit()">
+                                <option value="">Tahun</option>
+                                @foreach (range(date('Y'), date('Y') - 5) as $year)
+                                    <option value="{{ $year }}"
+                                        {{ request('filter_year') == $year ? 'selected' : '' }}>
+                                        {{ $year }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3">
                             <div class="input-group">
                                 <input name="cari" type="text" class="form-control" placeholder="Search..."
                                     value="{{ request('cari') }}">
@@ -61,6 +86,9 @@
                                 </th>
                                 <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">Room</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Period</h6>
                                 </th>
                                 <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">Payment Date</h6>
@@ -90,6 +118,11 @@
                                     </td>
                                     <td class="border-bottom-0">
                                         <p class="fw-normal mb-0">{{ $payment->member->room->room_number }}</p>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <p class="fw-normal mb-0">
+                                            {{ \Carbon\Carbon::create($payment->payment_year, $payment->payment_month, 1)->format('M Y') }}
+                                        </p>
                                     </td>
                                     <td class="border-bottom-0">
                                         <p class="fw-normal mb-0">
@@ -167,18 +200,57 @@
                             <form action="{{ route('payment.create') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-3">
-                                    <label for="exampleInputname1" class="form-label">Full Name</label>
-                                    <select name="member_id" class="form-select" required>
-                                        <option value="" disabled selected>-- Full Name --</option>
+                                    <label for="member_id" class="form-label">Full Name</label>
+                                    <select name="member_id" id="member_id" class="form-select" required>
+                                        <option value="" disabled selected>-- Select Member --</option>
                                         @foreach ($all_members as $member)
-                                            <option value="{{ $member->member_id }}">{{ $member->full_name }}</option>
+                                            <option value="{{ $member->member_id }}"
+                                                {{ old('member_id') == $member->member_id ? 'selected' : '' }}>
+                                                {{ $member->full_name }}
+                                            </option>
                                         @endforeach
                                     </select>
+                                    @error('member_id')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="mb-3">
-                                    <label for="exampleInputpaymentdate1" class="form-label">Payment Date</label>
-                                    <input type="date" name="payment_date" class="form-control"
-                                        id="exampleInputpaymentdate1" aria-describedby="paymentdateHelp" required>
+                                    <label for="payment_month" class="form-label">Payment Month</label>
+                                    <select name="payment_month" id="payment_month" class="form-select" required>
+                                        @foreach (range(1, 12) as $month)
+                                            <option value="{{ $month }}"
+                                                {{ old('payment_month') == $month ? 'selected' : '' }}>
+                                                {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('payment_month')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="payment_year" class="form-label">Payment Year</label>
+                                    <select name="payment_year" id="payment_year" class="form-select" required>
+                                        @foreach (range(date('Y'), date('Y') + 2) as $year)
+                                            <option value="{{ $year }}"
+                                                {{ old('payment_year') == $year ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('payment_year')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="payment_date" class="form-label">Payment Date</label>
+                                    <input type="date" name="payment_date" id="payment_date" class="form-control"
+                                        value="{{ old('payment_date') }}" required>
+                                    @error('payment_date')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="mb-3">
                                     <label for="exampleInputamount" class="form-label">Amount</label>

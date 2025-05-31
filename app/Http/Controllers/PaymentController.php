@@ -26,11 +26,17 @@ class PaymentController extends Controller
                     });
                 });
             })
+            ->when($request->filter_year, function ($query) use ($request) {
+                $query->whereYear('payment_date', $request->filter_year);
+            })
+            ->when($request->filter_month, function ($query) use ($request) {
+                $query->whereMonth('payment_date', $request->filter_month);
+            })
             ->with(['member.room.kost'])
-            ->orderBy('payment_id', 'desc')
+            ->orderBy('payment_date', 'desc')
             ->paginate(10);
 
-        $data_payment->appends($request->only(['kost_id', 'cari']));
+        $data_payment->appends($request->only(['kost_id', 'cari', 'filter_year', 'filter_month']));
 
         $all_members = Member::select('member_id', 'full_name')->get();
 
@@ -52,14 +58,31 @@ class PaymentController extends Controller
 
     public function create(Request $request)
     {
-
-        $validatedData = $request->validate([
-            'member_id'     => 'required',
-            'payment_date'  => 'required|date',
-            'amount'        => 'required'
+        $request->validate([
+            'member_id' => 'required|exists:tb_members,member_id',
+            'payment_date' => 'required|date',
+            'amount' => 'required|numeric',
+            'payment_month' => 'required|integer|between:1,12',
+            'payment_year' => 'required|integer',
         ]);
 
-        Payment::create($validatedData);
+        // Cek apakah pembayaran bulan & tahun ini sudah ada
+        $exists = Payment::where('member_id', $request->member_id)
+            ->where('payment_month', $request->payment_month)
+            ->where('payment_year', $request->payment_year)
+            ->exists();
+
+        if ($exists) {
+            return back()->withErrors(['error' => 'Pembayaran untuk bulan dan tahun ini sudah dilakukan.']);
+        }
+
+        Payment::create([
+            'member_id' => $request->member_id,
+            'payment_date' => $request->payment_date,
+            'payment_month' => $request->payment_month,
+            'payment_year' => $request->payment_year,
+            'amount' => $request->amount,
+        ]);
 
         return redirect()->route('payment')->with('success', 'Data has been added successfully');
     }
