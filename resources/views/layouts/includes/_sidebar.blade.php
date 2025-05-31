@@ -53,8 +53,8 @@
                         <span class="hide-menu">Members</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
+                <li class="sidebar-item {{ request()->routeIs('payment*') ? 'selected' : '' }}">
+                    <a class="sidebar-link {{ request()->routeIs('payment*') ? 'active' : '' }}" href="{{route('payment')}}" aria-expanded="false">
                         <span>
                             <i class="ti ti-currency-dollar"></i>
                         </span>

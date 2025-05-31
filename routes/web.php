@@ -5,10 +5,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KostController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/get-rooms/{kostId}', [MemberController::class, 'getRoomsByKost']);
+Route::get('/get-amount/{member_id}', [PaymentController::class, 'getAmount']);
 
 Route::get('/kost', [KostController::class, 'index'])->name('kost');
 Route::get('/kost/{id}', [KostController::class, 'show'])->name('kost.detail');
@@ -28,3 +30,9 @@ Route::post('/member/create', [MemberController::class, 'create'])->name('member
 Route::get('/member/{id}', [MemberController::class, 'edit'])->name('member.edit');
 Route::post('/member/{id}', [MemberController::class, 'update'])->name('member.update');
 Route::get('/member/delete/{id}', [MemberController::class, 'delete'])->name('member.delete');
+
+Route::get('/payment', [PaymentController::class, 'index'])->name('payment');
+Route::post('/payment/create', [PaymentController::class, 'create'])->name('payment.create');
+Route::get('/payment/{id}', [PaymentController::class, 'edit'])->name('payment.edit');
+Route::post('/payment/{id}', [PaymentController::class, 'update'])->name('payment.update');
+Route::get('/payment/delete/{id}', [PaymentController::class, 'delete'])->name('payment.delete');
