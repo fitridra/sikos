@@ -6,6 +6,7 @@ use App\Http\Controllers\KostController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\UnpaidController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -34,3 +35,5 @@ Route::get('/member/delete/{id}', [MemberController::class, 'delete'])->name('me
 Route::get('/payment', [PaymentController::class, 'index'])->name('payment');
 Route::post('/payment/create', [PaymentController::class, 'create'])->name('payment.create');
 Route::get('/payment/{id}', [PaymentController::class, 'delete'])->name('payment.delete');
+
+Route::get('/unpaid', [UnpaidController::class, 'index'])->name('unpaid');

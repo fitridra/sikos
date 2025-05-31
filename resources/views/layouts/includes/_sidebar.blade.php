@@ -30,15 +30,17 @@
                     <span class="hide-menu">KOST MANAGEMENT</span>
                 </li>
                 <li class="sidebar-item {{ request()->routeIs('kost*') ? 'selected' : '' }}">
-                    <a class="sidebar-link {{ request()->routeIs('kost*') ? 'active' : '' }}" href="{{route('kost')}}" aria-expanded="false">
+                    <a class="sidebar-link {{ request()->routeIs('kost*') ? 'active' : '' }}" href="{{ route('kost') }}"
+                        aria-expanded="false">
                         <span>
                             <i class="ti ti-home"></i>
                         </span>
                         <span class="hide-menu">Kosts</span>
                     </a>
                 </li>
-               <li class="sidebar-item {{ request()->routeIs('room*') ? 'selected' : '' }}">
-                    <a class="sidebar-link {{ request()->routeIs('room*') ? 'active' : '' }}" href="{{route('room')}}" aria-expanded="false">
+                <li class="sidebar-item {{ request()->routeIs('room*') ? 'selected' : '' }}">
+                    <a class="sidebar-link {{ request()->routeIs('room*') ? 'active' : '' }}" href="{{ route('room') }}"
+                        aria-expanded="false">
                         <span>
                             <i class="ti ti-article"></i>
                         </span>
@@ -46,7 +48,8 @@
                     </a>
                 </li>
                 <li class="sidebar-item {{ request()->routeIs('member*') ? 'selected' : '' }}">
-                    <a class="sidebar-link {{ request()->routeIs('member*') ? 'active' : '' }}" href="{{route('member')}}" aria-expanded="false">
+                    <a class="sidebar-link {{ request()->routeIs('member*') ? 'active' : '' }}"
+                        href="{{ route('member') }}" aria-expanded="false">
                         <span>
                             <i class="ti ti-users"></i>
                         </span>
@@ -54,15 +57,17 @@
                     </a>
                 </li>
                 <li class="sidebar-item {{ request()->routeIs('payment*') ? 'selected' : '' }}">
-                    <a class="sidebar-link {{ request()->routeIs('payment*') ? 'active' : '' }}" href="{{route('payment')}}" aria-expanded="false">
+                    <a class="sidebar-link {{ request()->routeIs('payment*') ? 'active' : '' }}"
+                        href="{{ route('payment') }}" aria-expanded="false">
                         <span>
                             <i class="ti ti-currency-dollar"></i>
                         </span>
                         <span class="hide-menu">Payments</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
+                <li class="sidebar-item {{ request()->routeIs('unpaid*') ? 'selected' : '' }}">
+                    <a class="sidebar-link {{ request()->routeIs('unpaid*') ? 'active' : '' }}"
+                        href="{{ route('unpaid') }}" aria-expanded="false">
                         <span>
                             <i class="ti ti-alert-triangle"></i>
                         </span>
