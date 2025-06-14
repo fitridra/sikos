@@ -103,11 +103,12 @@
                                                 class="btn btn-warning">
                                                 <i class="ti ti-edit"></i>
                                             </a>
+                                            @if (Auth::check() && Auth::user()->name === 'superadmin')
                                             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                                 data-bs-target="#confirmDeleteModal{{ $member->member_id }}">
                                                 <i class="ti ti-trash"></i>
                                             </button>
-
+                                            @endif
                                             <!-- Modal Delete-->
                                             <div class="modal fade" id="confirmDeleteModal{{ $member->member_id }}"
                                                 tabindex="-1" aria-labelledby="deleteLabel{{ $member->member_id }}"

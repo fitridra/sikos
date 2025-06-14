@@ -11,8 +11,10 @@
                 @endif
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-semibold mb-0">Data Kost</h5>
+                    @if (Auth::check() && Auth::user()->name === 'superadmin')
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
                             class="ti ti-plus"></i>&nbsp; Add Kost</a>
+                    @endif
                 </div>
                 <form method="GET" action="{{ url()->current() }}">
                     <div class="row mb-3">
@@ -102,6 +104,7 @@
                                                 class="btn btn-secondary">
                                                 <i class="ti ti-alert-circle"></i>
                                             </a>
+                                            @if (Auth::check() && Auth::user()->name === 'superadmin')
                                             <a href="{{ route('kost.edit', $kost->kost_id) }}" type="button"
                                                 class="btn btn-warning">
                                                 <i class="ti ti-edit"></i>
@@ -110,7 +113,7 @@
                                                 data-bs-target="#confirmDeleteModal{{ $kost->kost_id }}">
                                                 <i class="ti ti-trash"></i>
                                             </button>
-
+                                            @endif
                                             <!-- Modal Delete-->
                                             <div class="modal fade" id="confirmDeleteModal{{ $kost->kost_id }}"
                                                 tabindex="-1" aria-labelledby="deleteLabel{{ $kost->kost_id }}"

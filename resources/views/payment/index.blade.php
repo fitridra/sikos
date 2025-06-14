@@ -16,8 +16,10 @@
                 @endif
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-semibold mb-0">Data Payment</h5>
+                    @if (Auth::check() && Auth::user()->name === 'superadmin')
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
                             class="ti ti-plus"></i>&nbsp; Add Payment</a>
+                    @endif
                 </div>
                 <form method="GET" action="{{ url()->current() }}">
                     <div class="row g-3 mb-3 align-items-center">
@@ -101,9 +103,11 @@
                                 <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">Amount</h6>
                                 </th>
+                                @if (Auth::check() && Auth::user()->name === 'superadmin')
                                 <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0 text-center">Action</h6>
                                 </th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -152,6 +156,7 @@
                                     <td class="border-bottom-0">
                                         <p class="fw-normal mb-0">{{ number_format($payment->amount, 0, ',', '.') }}</p>
                                     </td>
+                                    @if (Auth::check() && Auth::user()->name === 'superadmin')
                                     <td class="border-bottom-0 text-center">
                                         <small>
                                             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
@@ -190,6 +195,7 @@
                                             </div>
                                         </small>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

@@ -32,9 +32,11 @@
                         </div>
                     </div>
 
+                    @if (Auth::check() && Auth::user()->name === 'superadmin')
                     <div class="col-12 col-sm-4 col-md-3">
                         <div><strong>Total Unpaid:</strong> Rp {{ number_format($totalUnpaid, 0, ',', '.') }}</div>
                     </div>
+                    @endif
                 </form>
                 <div class="table-responsive">
                     <table class="table text-nowrap mb-0 align-middle">

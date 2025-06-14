@@ -11,8 +11,10 @@
                 @endif
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-semibold mb-0">Data Room</h5>
+                    @if (Auth::check() && Auth::user()->name === 'superadmin')
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
                             class="ti ti-plus"></i>&nbsp; Add Room</a>
+                    @endif
                 </div>
                 <form method="GET" action="{{ url()->current() }}">
                     <div class="row g-3 mb-3">
@@ -70,9 +72,11 @@
                                 <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">Status</h6>
                                 </th>
+                                @if (Auth::check() && Auth::user()->name === 'superadmin')
                                 <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0 text-center">Action</h6>
                                 </th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -98,6 +102,7 @@
                                             </span>
                                         </div>
                                     </td>
+                                    @if (Auth::check() && Auth::user()->name === 'superadmin')
                                     <td class="border-bottom-0 text-center">
                                         <small>
                                             <a href="{{ route('room.edit', $room->room_id) }}" type="button"
@@ -138,6 +143,7 @@
                                             </div>
                                         </small>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

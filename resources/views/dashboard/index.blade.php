@@ -3,6 +3,7 @@
 @section('content')
     <div class="container-fluid">
         <!--  Row 1 -->
+        @if (Auth::check() && Auth::user()->name === 'superadmin')
         <div class="row">
             <div class="col-lg">
                 <div class="row">
@@ -72,6 +73,7 @@
                 </div>
             </div>
         </div>
+        @endif
         <div class="row">
             <div class="col-lg-4 d-flex align-items-stretch">
                 <div class="card w-100">
