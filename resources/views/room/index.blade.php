@@ -11,7 +11,7 @@
                 @endif
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-semibold mb-0">Data Room</h5>
-                    @if (Auth::check() && Auth::user()->name === 'superadmin')
+                    @if (Auth::check() && Auth::user()->username === 'superadmin')
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
                             class="ti ti-plus"></i>&nbsp; Add Room</a>
                     @endif
@@ -72,7 +72,7 @@
                                 <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">Status</h6>
                                 </th>
-                                @if (Auth::check() && Auth::user()->name === 'superadmin')
+                                @if (Auth::check() && Auth::user()->username === 'superadmin')
                                 <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0 text-center">Action</h6>
                                 </th>
@@ -102,7 +102,7 @@
                                             </span>
                                         </div>
                                     </td>
-                                    @if (Auth::check() && Auth::user()->name === 'superadmin')
+                                    @if (Auth::check() && Auth::user()->username === 'superadmin')
                                     <td class="border-bottom-0 text-center">
                                         <small>
                                             <a href="{{ route('room.edit', $room->room_id) }}" type="button"

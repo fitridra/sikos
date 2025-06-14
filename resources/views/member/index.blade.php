@@ -103,7 +103,7 @@
                                                 class="btn btn-warning">
                                                 <i class="ti ti-edit"></i>
                                             </a>
-                                            @if (Auth::check() && Auth::user()->name === 'superadmin')
+                                            @if (Auth::check() && Auth::user()->username === 'superadmin')
                                             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                                 data-bs-target="#confirmDeleteModal{{ $member->member_id }}">
                                                 <i class="ti ti-trash"></i>

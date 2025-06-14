@@ -11,7 +11,7 @@
                 @endif
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-semibold mb-0">Data Kost</h5>
-                    @if (Auth::check() && Auth::user()->name === 'superadmin')
+                    @if (Auth::check() && Auth::user()->username === 'superadmin')
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
                             class="ti ti-plus"></i>&nbsp; Add Kost</a>
                     @endif
@@ -104,7 +104,7 @@
                                                 class="btn btn-secondary">
                                                 <i class="ti ti-alert-circle"></i>
                                             </a>
-                                            @if (Auth::check() && Auth::user()->name === 'superadmin')
+                                            @if (Auth::check() && Auth::user()->username === 'superadmin')
                                             <a href="{{ route('kost.edit', $kost->kost_id) }}" type="button"
                                                 class="btn btn-warning">
                                                 <i class="ti ti-edit"></i>

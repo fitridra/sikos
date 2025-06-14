@@ -3,7 +3,7 @@
 @section('content')
     <div class="container-fluid">
         <!--  Row 1 -->
-        @if (Auth::check() && Auth::user()->name === 'superadmin')
+        @if (Auth::check() && Auth::user()->username === 'superadmin')
         <div class="row">
             <div class="col-lg">
                 <div class="row">

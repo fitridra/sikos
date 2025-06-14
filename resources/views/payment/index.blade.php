@@ -16,9 +16,16 @@
                 @endif
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-semibold mb-0">Data Payment</h5>
-                    @if (Auth::check() && Auth::user()->name === 'superadmin')
-                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-                            class="ti ti-plus"></i>&nbsp; Add Payment</a>
+                    @if (Auth::check() && Auth::user()->username === 'superadmin')
+                        <div class="d-flex gap-2">
+                            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <i class="ti ti-plus"></i>&nbsp; Add Payment
+                            </a>
+                            <a href="{{ route('payment.export.excel', request()->only(['kost_id', 'filter_month', 'filter_year', 'cari'])) }}"
+                                class="btn btn-outline-success">
+                                <i class="ti ti-download"></i> Export to Excel
+                            </a>
+                        </div>
                     @endif
                 </div>
                 <form method="GET" action="{{ url()->current() }}">
@@ -103,10 +110,10 @@
                                 <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">Amount</h6>
                                 </th>
-                                @if (Auth::check() && Auth::user()->name === 'superadmin')
-                                <th class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0 text-center">Action</h6>
-                                </th>
+                                @if (Auth::check() && Auth::user()->username === 'superadmin')
+                                    <th class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0 text-center">Action</h6>
+                                    </th>
                                 @endif
                             </tr>
                         </thead>
@@ -156,45 +163,45 @@
                                     <td class="border-bottom-0">
                                         <p class="fw-normal mb-0">{{ number_format($payment->amount, 0, ',', '.') }}</p>
                                     </td>
-                                    @if (Auth::check() && Auth::user()->name === 'superadmin')
-                                    <td class="border-bottom-0 text-center">
-                                        <small>
-                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                                data-bs-target="#confirmDeleteModal{{ $payment->payment_id }}">
-                                                <i class="ti ti-trash"></i>
-                                            </button>
+                                    @if (Auth::check() && Auth::user()->username === 'superadmin')
+                                        <td class="border-bottom-0 text-center">
+                                            <small>
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#confirmDeleteModal{{ $payment->payment_id }}">
+                                                    <i class="ti ti-trash"></i>
+                                                </button>
 
-                                            <!-- Modal Delete-->
-                                            <div class="modal fade" id="confirmDeleteModal{{ $payment->payment_id }}"
-                                                tabindex="-1" aria-labelledby="deleteLabel{{ $payment->payment_id }}"
-                                                aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title"
-                                                                id="deleteLabel{{ $payment->payment_id }}">
-                                                                Delete Confirmation</h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Are you sure you want to delete the payment
-                                                            <strong>{{ $payment->member->full_name }} -
-                                                                {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</strong>?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Cancel</button>
-                                                            @method('delete')
-                                                            @csrf
-                                                            <a href="{{ route('payment.delete', $payment->payment_id) }}"
-                                                                class="btn btn-danger">Delete</a>
+                                                <!-- Modal Delete-->
+                                                <div class="modal fade" id="confirmDeleteModal{{ $payment->payment_id }}"
+                                                    tabindex="-1" aria-labelledby="deleteLabel{{ $payment->payment_id }}"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"
+                                                                    id="deleteLabel{{ $payment->payment_id }}">
+                                                                    Delete Confirmation</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to delete the payment
+                                                                <strong>{{ $payment->member->full_name }} -
+                                                                    {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</strong>?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Cancel</button>
+                                                                @method('delete')
+                                                                @csrf
+                                                                <a href="{{ route('payment.delete', $payment->payment_id) }}"
+                                                                    class="btn btn-danger">Delete</a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </small>
-                                    </td>
+                                            </small>
+                                        </td>
                                     @endif
                                 </tr>
                             @endforeach

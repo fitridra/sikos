@@ -11,6 +11,11 @@
                 @endif
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-semibold mb-0">Data Unpaid</h5>
+                    @if (Auth::check() && Auth::user()->username === 'superadmin')
+                        <a href="{{ route('unpaid.export.excel', request()->query()) }}" class="btn btn-outline-success">
+                            <i class="ti ti-download"></i> Export to Excel
+                        </a>
+                    @endif
                 </div>
                 <form method="GET" action="{{ url()->current() }}" class="row g-3 align-items-end mb-4">
                     <div class="row g-3 mb-3">
@@ -32,10 +37,10 @@
                         </div>
                     </div>
 
-                    @if (Auth::check() && Auth::user()->name === 'superadmin')
-                    <div class="col-12 col-sm-4 col-md-3">
-                        <div><strong>Total Unpaid:</strong> Rp {{ number_format($totalUnpaid, 0, ',', '.') }}</div>
-                    </div>
+                    @if (Auth::check() && Auth::user()->username === 'superadmin')
+                        <div class="col-12 col-sm-4 col-md-3">
+                            <div><strong>Total Unpaid:</strong> Rp {{ number_format($totalUnpaid, 0, ',', '.') }}</div>
+                        </div>
                     @endif
                 </form>
                 <div class="table-responsive">

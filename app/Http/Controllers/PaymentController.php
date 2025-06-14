@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Kost;
 use App\Models\Member;
 use App\Models\Payment;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
@@ -107,5 +110,94 @@ class PaymentController extends Controller
     {
         Payment::where('payment_id', $id)->delete();
         return redirect()->route('payment')->with('success', 'Data has been deleted successfully.');
+    }
+
+    public function exportPaymentExcel(Request $request)
+    {
+        $query = Payment::with('member.room.kost');
+
+        // Filter Kost
+        if ($request->filled('kost_id')) {
+            $query->whereHas('member.room.kost', function ($q) use ($request) {
+                $q->where('kost_id', $request->kost_id);
+            });
+        }
+
+        // Filter Bulan & Tahun
+        if ($request->filled('filter_month')) {
+            $query->whereMonth('payment_date', $request->filter_month);
+        }
+
+        if ($request->filled('filter_year')) {
+            $query->whereYear('payment_date', $request->filter_year);
+        }
+
+        // Filter Nama
+        if ($request->filled('cari')) {
+            $query->whereHas('member', function ($q) use ($request) {
+                $q->where('full_name', 'like', '%' . $request->cari . '%');
+            });
+        }
+
+        $data = $query->orderBy('payment_date', 'desc')->get();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set header
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Full Name');
+        $sheet->setCellValue('C1', 'Kost Name');
+        $sheet->setCellValue('D1', 'Room');
+        $sheet->setCellValue('E1', 'Period');
+        $sheet->setCellValue('F1', 'Payment Date');
+        $sheet->setCellValue('G1', 'Amount');
+
+        // Bold header
+        $sheet->getStyle('A1:G1')->getFont()->setBold(true);
+
+        // Fill data
+        $row = 2;
+        $no = 1;
+        foreach ($data as $item) {
+            $sheet->setCellValue('A' . $row, $no++);
+            $sheet->setCellValue('B' . $row, $item->member->full_name);
+            $sheet->setCellValue('C' . $row, $item->member->room->kost->kost_name);
+            $sheet->setCellValue('D' . $row, $item->member->room->room_number);
+
+            // Period
+            switch ($item->duration) {
+                case 'monthly':
+                    $period = 'Monthly';
+                    break;
+                case '6months':
+                    $period = '6 Months';
+                    break;
+                case 'yearly':
+                    $period = 'Yearly';
+                    break;
+                default:
+                    $period = ucfirst($item->duration);
+            }
+
+            $sheet->setCellValue('E' . $row, $period);
+            $sheet->setCellValue('F' . $row, Carbon::parse($item->payment_date)->format('d M Y'));
+            $sheet->setCellValue('G' . $row, number_format($item->amount, 0, ',', '.'));
+
+            $row++;
+        }
+
+        // Auto width
+        foreach (range('A', 'G') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Output
+        $filename = 'data_payment_' . now()->format('Ymd_His') . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+        $temp_file = tempnam(sys_get_temp_dir(), $filename);
+        $writer->save($temp_file);
+
+        return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
     }
 }
