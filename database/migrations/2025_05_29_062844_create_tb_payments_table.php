@@ -15,13 +15,10 @@ return new class extends Migration
             $table->id('payment_id');
             $table->unsignedBigInteger('member_id');
             $table->foreign('member_id')->references('member_id')->on('tb_members')->onDelete('cascade');
-            $table->unsignedTinyInteger('payment_month');
-            $table->unsignedSmallInteger('payment_year');
+            $table->string('duration');
             $table->date('payment_date');
             $table->integer('amount');
             $table->timestamps();
-
-            $table->unique(['member_id', 'payment_month', 'payment_year']);
         });
     }
 

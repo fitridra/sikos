@@ -219,35 +219,6 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="mb-3">
-                                    <label for="payment_month" class="form-label">Payment Month</label>
-                                    <select name="payment_month" id="payment_month" class="form-select" required>
-                                        @foreach (range(1, 12) as $month)
-                                            <option value="{{ $month }}"
-                                                {{ old('payment_month') == $month ? 'selected' : '' }}>
-                                                {{ \Carbon\Carbon::create()->month($month)->format('F') }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('payment_month')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="payment_year" class="form-label">Payment Year</label>
-                                    <select name="payment_year" id="payment_year" class="form-select" required>
-                                        @foreach (range(date('Y'), date('Y') + 2) as $year)
-                                            <option value="{{ $year }}"
-                                                {{ old('payment_year') == $year ? 'selected' : '' }}>
-                                                {{ $year }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('payment_year')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
 
                                 <div class="mb-3">
                                     <label for="payment_date" class="form-label">Payment Date</label>
@@ -257,6 +228,28 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
+
+                                <div class="mb-3">
+                                    <label for="duration" class="form-label">Period</label>
+                                    <select name="duration" id="duration" class="form-select" required>
+                                        <option value="monthly" {{ old('duration') == 'monthly' ? 'selected' : '' }}>
+                                            Monthly</option>
+                                        <option value="6months" {{ old('duration') == '6months' ? 'selected' : '' }}>6
+                                            Months</option>
+                                        <option value="yearly" {{ old('duration') == 'yearly' ? 'selected' : '' }}>Yearly
+                                        </option>
+                                    </select>
+                                    @error('duration')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="discount" class="form-label">Discount (Rp)</label>
+                                    <input type="number" name="discount" id="discount" class="form-control"
+                                        value="0" min="0">
+                                </div>
+
                                 <div class="mb-3">
                                     <label for="exampleInputamount" class="form-label">Amount</label>
                                     <input type="text" class="form-control" id="amount_display" readonly>
@@ -277,21 +270,33 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const memberSelect = document.querySelector('select[name="member_id"]');
+            const durationSelect = document.getElementById('duration');
+            const discountInput = document.getElementById('discount');
             const amountInput = document.getElementById('amount');
             const amountDisplay = document.getElementById('amount_display');
 
-            memberSelect.addEventListener('change', function() {
-                const memberId = this.value;
+            function updateAmount() {
+                const memberId = memberSelect.value;
+                const duration = durationSelect.value;
+                const discount = discountInput.value || 0;
+
                 if (memberId) {
-                    fetch(`/get-amount/${memberId}`)
+                    fetch(`/get-amount/${memberId}?duration=${duration}&discount=${discount}`)
                         .then(response => response.json())
                         .then(data => {
                             const amount = data.amount || 0;
                             amountInput.value = amount;
                             amountDisplay.value = new Intl.NumberFormat('id-ID').format(amount);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching amount:', error);
                         });
                 }
-            });
+            }
+
+            memberSelect.addEventListener('change', updateAmount);
+            durationSelect.addEventListener('change', updateAmount);
+            discountInput.addEventListener('input', updateAmount);
         });
     </script>
 @endsection

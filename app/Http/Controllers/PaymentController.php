@@ -49,7 +49,7 @@ class PaymentController extends Controller
         return view('payment.index', compact('data_payment', 'all_members', 'allkosts'));
     }
 
-    public function getAmount($member_id)
+    public function getAmount(Request $request, $member_id)
     {
         $member = Member::with('room.kost')->find($member_id);
 
@@ -57,7 +57,30 @@ class PaymentController extends Controller
             return response()->json(['amount' => 0]);
         }
 
-        return response()->json(['amount' => $member->room->kost->amount]);
+        $baseAmount = $member->room->kost->amount;
+
+        $duration = $request->input('duration', 'monthly');
+        $discount = floatval($request->input('discount', 0));
+
+        switch (strtolower($duration)) {
+            case 'yearly':
+                $multiplier = 12;
+                break;
+            case '6months':
+                $multiplier = 6;
+                break;
+            case 'monthly':
+            default:
+                $multiplier = 1;
+                break;
+        }
+
+        // Hitung total
+        $total = ($baseAmount * $multiplier) - $discount;
+
+        $finalAmount = max(0, round($total));
+
+        return response()->json(['amount' => $finalAmount]);
     }
 
     public function create(Request $request)
@@ -66,25 +89,14 @@ class PaymentController extends Controller
             'member_id' => 'required|exists:tb_members,member_id',
             'payment_date' => 'required|date',
             'amount' => 'required|numeric',
-            'payment_month' => 'required|integer|between:1,12',
-            'payment_year' => 'required|integer',
+            'duration' => 'required|in:monthly,6months,yearly',
+            'discount' => 'nullable|numeric|min:0',
         ]);
-
-        // Cek apakah pembayaran bulan & tahun ini sudah ada
-        $exists = Payment::where('member_id', $request->member_id)
-            ->where('payment_month', $request->payment_month)
-            ->where('payment_year', $request->payment_year)
-            ->exists();
-
-        if ($exists) {
-            return back()->with('error', 'Payment for this month and year has already been made.');
-        }
 
         Payment::create([
             'member_id' => $request->member_id,
             'payment_date' => $request->payment_date,
-            'payment_month' => $request->payment_month,
-            'payment_year' => $request->payment_year,
+            'duration' => $request->duration,
             'amount' => $request->amount,
         ]);
 
