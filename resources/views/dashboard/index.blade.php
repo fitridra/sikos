@@ -13,7 +13,7 @@
                                 <div class="row alig n-items-start">
                                     <div class="col-8">
                                         <h5 class="card-title mb-9 fw-semibold"> Annual Income </h5>
-                                        <h4 class="fw-semibold mb-3">Rp {{ number_format($annualIncome, 0, ',', '.') }}</h4>
+                                        <h5 class="fw-semibold mb-3">Rp {{ number_format($annualIncome, 0, ',', '.') }}</h5>
                                     </div>
                                     <div class="col-4">
                                         <div class="d-flex justify-content-end">
@@ -34,8 +34,7 @@
                                 <div class="row alig n-items-start">
                                     <div class="col-8">
                                         <h5 class="card-title mb-9 fw-semibold"> Monthly Earnings </h5>
-                                        <h4 class="fw-semibold mb-3">Rp {{ number_format($monthlyEarnings, 0, ',', '.') }}
-                                        </h4>
+                                        <h5 class="fw-semibold mb-3">Rp {{ number_format($monthlyEarnings, 0, ',', '.') }}</h5>
                                     </div>
                                     <div class="col-4">
                                         <div class="d-flex justify-content-end">
@@ -56,7 +55,7 @@
                                 <div class="row alig n-items-start">
                                     <div class="col-8">
                                         <h5 class="card-title mb-9 fw-semibold"> Unpaid Rent </h5>
-                                        <h4 class="fw-semibold mb-3">Rp {{ number_format($totalUnpaid, 0, ',', '.') }}</h4>
+                                        <h5 class="fw-semibold mb-3">Rp {{ number_format($totalUnpaid, 0, ',', '.') }}</h5>
                                     </div>
                                     <div class="col-4">
                                         <div class="d-flex justify-content-end">
