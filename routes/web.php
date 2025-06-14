@@ -7,6 +7,11 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UnpaidController;
+use App\Http\Controllers\UserController;
+
+Route::get('/login', [UserController::class, 'index'])->name('login');
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
