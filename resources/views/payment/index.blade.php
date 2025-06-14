@@ -126,7 +126,22 @@
                                     </td>
                                     <td class="border-bottom-0">
                                         <p class="fw-normal mb-0">
-                                            {{ \Carbon\Carbon::create($payment->payment_year, $payment->payment_month, 1)->format('M Y') }}
+                                            @switch($payment->duration)
+                                                @case('monthly')
+                                                    Monthly
+                                                @break
+
+                                                @case('6months')
+                                                    6 Months
+                                                @break
+
+                                                @case('yearly')
+                                                    Yearly
+                                                @break
+
+                                                @default
+                                                    {{ ucfirst($payment->duration) }}
+                                            @endswitch
                                         </p>
                                     </td>
                                     <td class="border-bottom-0">

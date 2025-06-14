@@ -13,7 +13,7 @@ class PaymentSeeder extends Seeder
         Payment::insert([
             [
                 'member_id'    => 1,
-                'payment_date' => '2025-05-10',
+                'payment_date' => '2025-01-10',
                 'duration'     => 'monthly',
                 'amount'       => 1000000,
                 'created_at'   => now(),
@@ -21,17 +21,17 @@ class PaymentSeeder extends Seeder
             ],
             [
                 'member_id'    => 2,
-                'payment_date' => '2025-05-13',
+                'payment_date' => '2024-11-13',
                 'duration'     => '6months',
-                'amount'       => 1000000,
+                'amount'       => 6000000,
                 'created_at'   => now(),
                 'updated_at'   => now(),
             ],
             [
                 'member_id'    => 3,
-                'payment_date' => '2025-05-20',
+                'payment_date' => '2025-03-20',
                 'duration'     => 'yearly',
-                'amount'       => 1200000,
+                'amount'       => 14000000,
                 'created_at'   => now(),
                 'updated_at'   => now(),
             ],

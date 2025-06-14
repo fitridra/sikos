@@ -23,7 +23,7 @@ class MemberSeeder extends Seeder
             [
                 'full_name'     => 'Rina Kartika',
                 'room_id'       => 1,
-                'move_in_date'  => Carbon::parse('2025-02-13'),
+                'move_in_date'  => Carbon::parse('2024-11-13'),
                 'move_out_date' => Carbon::parse('2025-05-15'),
                 'created_at'    => now(),
                 'updated_at'    => now(),

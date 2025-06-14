@@ -12,10 +12,9 @@ class UnpaidController extends Controller
 {
     public function index(Request $request)
     {
-        $today = Carbon::today();
+        $today = now();
         $kostId = $request->input('kost_id');
 
-        // Ambil semua member aktif (move_in <= today && (move_out null or >= today))
         $membersRaw = Member::whereDate('move_in_date', '<=', $today)
             ->where(function ($q) use ($today) {
                 $q->whereNull('move_out_date')
@@ -26,47 +25,73 @@ class UnpaidController extends Controller
                     $sub->where('kost_id', $kostId);
                 });
             })
-            ->with('room.kost', 'payments')
+            ->with(['room.kost', 'payments'])
             ->get();
 
-        // Hitung unpaid secara manual
         $unpaidMembers = collect();
 
         foreach ($membersRaw as $member) {
-            $kost = $member->room->kost;
+            $kost = $member->room->kost ?? null;
+            if (!$kost) continue;
+
             $amountPerMonth = $kost->amount ?? 0;
+            $moveIn = Carbon::parse($member->move_in_date);
+            $moveInDay = $moveIn->day;
+            $moveInMonth = $moveIn->copy()->startOfMonth();
 
-            // Hitung total bulan dari move_in sampai bulan ini
-            $bulanMasuk = Carbon::parse($member->move_in_date)->startOfMonth();
-            $bulanSekarang = $today->copy()->startOfMonth();
-            $totalBulan = $bulanMasuk->diffInMonths($bulanSekarang) + 1;
+            // Hitung bulan terakhir yang sudah jatuh tempo untuk member ini
+            $currentMonth = $today->copy()->startOfMonth();
+            if ($today->day < $moveInDay) {
+                $lastDueMonth = $currentMonth->subMonth(); // belum jatuh tempo bulan ini
+            } else {
+                $lastDueMonth = $currentMonth;
+            }
 
-            // Hitung total pembayaran valid hingga bulan ini
-            $totalPaid = $member->payments()
-                ->where(function ($q) use ($today) {
-                    $q->where('payment_year', '<', $today->year)
-                        ->orWhere(function ($sub) use ($today) {
-                            $sub->where('payment_year', $today->year)
-                                ->where('payment_month', '<=', $today->month);
-                        });
-                })
-                ->sum('amount');
+            // Buat daftar bulan yang seharusnya dibayar
+            $expectedMonths = collect();
+            $loop = $moveInMonth->copy();
+            while ($loop <= $lastDueMonth) {
+                $expectedMonths->push($loop->format('Y-m'));
+                $loop->addMonth();
+            }
 
-            $totalDue = $amountPerMonth * $totalBulan;
-            $totalUnpaid = $totalDue - $totalPaid;
+            // Buat daftar bulan yang sudah dibayar
+            $paidMonths = collect();
+            foreach ($member->payments as $payment) {
+                $start = Carbon::parse($payment->payment_date)->startOfMonth();
+
+                if ($payment->duration === 'monthly') {
+                    $months = 1;
+                } elseif ($payment->duration === '6months') {
+                    $months = 6;
+                } elseif ($payment->duration === 'yearly') {
+                    $months = 12;
+                } else {
+                    $months = 0;
+                }
+
+                for ($i = 0; $i < $months; $i++) {
+                    $paidMonths->push($start->copy()->addMonths($i)->format('Y-m'));
+                }
+            }
+
+            // Bandingkan expected dengan paid
+            $unpaidMonths = $expectedMonths->diff($paidMonths);
+            $totalUnpaid = $unpaidMonths->count() * $amountPerMonth;
 
             if ($totalUnpaid > 0) {
                 $unpaidMembers->push((object)[
                     'full_name'     => $member->full_name,
                     'room_number'   => $member->room->room_number ?? '-',
                     'kost_name'     => $kost->kost_name ?? '-',
-                    'months_unpaid' => $amountPerMonth > 0 ? round($totalUnpaid / $amountPerMonth) : 0,
+                    'months_unpaid' => $unpaidMonths->count(),
                     'total_due'     => $totalUnpaid,
+                    'unpaid_months' => $unpaidMonths->toArray(),
                 ]);
             }
         }
 
-        // pagination
+        // Pagination
         $perPage = 10;
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentItems = $unpaidMembers->slice(($currentPage - 1) * $perPage, $perPage)->values();
@@ -78,10 +103,7 @@ class UnpaidController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        // Total unpaid untuk halaman ini
         $totalUnpaid = $currentItems->sum('total_due');
-
-        // Daftar kost untuk filter
         $allkosts = Kost::select('kost_id', 'kost_name')->get();
 
         return view('unpaid.index', [
