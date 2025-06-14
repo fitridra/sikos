@@ -57,6 +57,12 @@
                                     <h6 class="fw-semibold mb-0">Full Name</h6>
                                 </th>
                                 <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Address</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Phone</h6>
+                                </th>
+                                <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">Kost Name</h6>
                                 </th>
                                 <th class="border-bottom-0">
@@ -84,6 +90,12 @@
                                     </td>
                                     <td class="border-bottom-0">
                                         <p class="fw-semibold mb-0">{{ $member->full_name }}</p>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <p class="fw-normal mb-0">{{ $member->address }}</p>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <p class="fw-normal mb-0">{{ $member->phone }}</p>
                                     </td>
                                     <td class="border-bottom-0">
                                         <p class="fw-normal mb-0">{{ $member->room->kost->kost_name }}</p>
@@ -172,6 +184,16 @@
                                     <label for="exampleInputname1" class="form-label">Full Name</label>
                                     <input type="text" name="full_name" class="form-control" id="exampleInputName1"
                                         aria-describedby="nameHelp" placeholder="Bunga Cinta Lestari" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputaddress1" class="form-label">Address</label>
+                                    <input type="text" name="address" class="form-control" id="exampleInputAddress1"
+                                        aria-describedby="addressHelp" placeholder="DKI Jakarta">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputphone1" class="form-label">Phone</label>
+                                    <input type="text" name="phone" class="form-control" id="exampleInputPhone1"
+                                        aria-describedby="phoneHelp" placeholder="081234567890">
                                 </div>
                                 <div class="mb-3">
                                     <label for="exampleInputkostname1" class="form-label">Kost Name</label>

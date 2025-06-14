@@ -14,6 +14,8 @@ class Member extends Model
 
     protected $fillable = [
         'full_name',
+        'address',
+        'phone',
         'room_id',
         'move_in_date',
         'move_out_date',

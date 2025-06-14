@@ -61,6 +61,8 @@ class MemberController extends Controller
 
         $request->validate([
             'full_name'     => 'required',
+            'address'       => 'nullable',
+            'phone'         => 'nullable',
             'kost_id'       => 'required',
             'room_id'       => 'required',
             'move_in_date'  => 'required|date',
@@ -69,6 +71,8 @@ class MemberController extends Controller
         $member = new Member();
         $member->room_id = $request->room_id;
         $member->full_name = $request->full_name;
+        $member->address = $request->address;
+        $member->phone = $request->phone;
         $member->move_in_date = $request->move_in_date;
         $member->save();
 
@@ -111,6 +115,8 @@ class MemberController extends Controller
 
         $request->validate([
             'full_name' => 'required',
+            'address' => 'nullable',
+            'phone' => 'nullable',
             'room_id' => 'required',
             'move_in_date' => 'required|date',
             'move_out_date' => 'nullable|date|after_or_equal:move_in_date'
@@ -118,6 +124,8 @@ class MemberController extends Controller
 
         // Update data member
         $member->full_name = $request->full_name;
+        $member->address = $request->address;
+        $member->phone = $request->phone;
         $member->room_id = $request->room_id;
         $member->move_in_date = $request->move_in_date;
         $member->move_out_date = $request->move_out_date;

@@ -20,6 +20,16 @@
                                     required>
                             </div>
                             <div class="mb-3">
+                                <label for="exampleInputaddress1" class="form-label">Address</label>
+                                <input type="text" name="address" value="{{ $member->address }}" class="form-control" id="exampleInputAddress1"
+                                    aria-describedby="addressHelp" placeholder="DKI Jakarta">
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputphone1" class="form-label">Phone</label>
+                                <input type="text" name="phone" value="{{ $member->phone }}" class="form-control" id="exampleInputPhone1"
+                                    aria-describedby="phoneHelp" placeholder="081234567890">
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label">Kost Name</label>
                                 <select name="kost_id" id="kost" class="form-select" required
                                     data-selected-room="{{ $member->room_id }}">
