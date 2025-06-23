@@ -17,80 +17,49 @@ class UnpaidController extends Controller
         $today = now();
         $kostId = $request->input('kost_id');
 
-        $membersRaw = Member::whereDate('move_in_date', '<=', $today)
-            ->where(function ($q) use ($today) {
-                $q->whereNull('move_out_date')
-                    ->orWhereDate('move_out_date', '>=', $today);
-            })
+        $membersRaw = Member::whereDate('move_out_date', '<', $today)
             ->when($kostId, function ($q) use ($kostId) {
                 $q->whereHas('room.kost', function ($sub) use ($kostId) {
                     $sub->where('kost_id', $kostId);
                 });
             })
-            ->with(['room.kost', 'payments'])
+            ->with(['room.kost'])
             ->get();
 
         $unpaidMembers = collect();
 
         foreach ($membersRaw as $member) {
             $kost = $member->room->kost ?? null;
-            if (!$kost) continue;
+            if (!$kost || !$member->move_out_date) continue;
 
-            $amountPerMonth = $kost->amount ?? 0;
-            $moveIn = Carbon::parse($member->move_in_date);
-            $moveInDay = $moveIn->day;
-            $moveInMonth = $moveIn->copy()->startOfMonth();
+            $moveOut = Carbon::parse($member->move_out_date);
+            if ($today->lte($moveOut)) continue;
 
-            // Hitung bulan terakhir yang sudah jatuh tempo untuk member ini
-            $currentMonth = $today->copy()->startOfMonth();
-            if ($today->day < $moveInDay) {
-                $lastDueMonth = $currentMonth->subMonth(); // belum jatuh tempo bulan ini
-            } else {
-                $lastDueMonth = $currentMonth;
+            $moveOutMonth = $moveOut->copy()->startOfMonth();
+            $nowMonth = $today->copy()->startOfMonth();
+
+            $monthsUnpaid = $moveOutMonth->diffInMonths($nowMonth);
+            if ($today->gt($moveOut)) {
+                $monthsUnpaid += 1;
             }
 
-            // Buat daftar bulan yang seharusnya dibayar
-            $expectedMonths = collect();
-            $loop = $moveInMonth->copy();
-            while ($loop <= $lastDueMonth) {
-                $expectedMonths->push($loop->format('Y-m'));
-                $loop->addMonth();
+            // Buat daftar bulan unpaid
+            $unpaidMonths = [];
+            $loop = $moveOutMonth->copy()->addMonth();
+            for ($i = 0; $i < $monthsUnpaid; $i++) {
+                $unpaidMonths[] = $loop->copy()->addMonths($i)->format('Y-m');
             }
 
-            // Buat daftar bulan yang sudah dibayar
-            $paidMonths = collect();
-            foreach ($member->payments as $payment) {
-                $start = Carbon::parse($payment->payment_date)->startOfMonth();
+            $totalUnpaid = $monthsUnpaid * ($kost->amount ?? 0);
 
-                if ($payment->duration === 'monthly') {
-                    $months = 1;
-                } elseif ($payment->duration === '6months') {
-                    $months = 6;
-                } elseif ($payment->duration === 'yearly') {
-                    $months = 12;
-                } else {
-                    $months = 0;
-                }
-
-                for ($i = 0; $i < $months; $i++) {
-                    $paidMonths->push($start->copy()->addMonths($i)->format('Y-m'));
-                }
-            }
-
-            // Bandingkan expected dengan paid
-            $unpaidMonths = $expectedMonths->diff($paidMonths);
-            $totalUnpaid = $unpaidMonths->count() * $amountPerMonth;
-
-            if ($totalUnpaid > 0) {
-                $unpaidMembers->push((object)[
-                    'full_name'     => $member->full_name,
-                    'room_number'   => $member->room->room_number ?? '-',
-                    'kost_name'     => $kost->kost_name ?? '-',
-                    'months_unpaid' => $unpaidMonths->count(),
-                    'total_due'     => $totalUnpaid,
-                    'unpaid_months' => $unpaidMonths->toArray(),
-                ]);
-            }
+            $unpaidMembers->push((object)[
+                'full_name'     => $member->full_name,
+                'room_number'   => $member->room->room_number ?? '-',
+                'kost_name'     => $kost->kost_name ?? '-',
+                'months_unpaid' => $monthsUnpaid,
+                'total_due'     => $totalUnpaid,
+                'unpaid_months' => $unpaidMonths,
+            ]);
         }
 
         // Pagination
@@ -121,66 +90,49 @@ class UnpaidController extends Controller
         $today = now();
         $kostId = $request->input('kost_id');
 
-        $membersRaw = Member::whereDate('move_in_date', '<=', $today)
-            ->where(function ($q) use ($today) {
-                $q->whereNull('move_out_date')
-                    ->orWhereDate('move_out_date', '>=', $today);
-            })
+        $membersRaw = Member::whereDate('move_out_date', '<', $today)
             ->when($kostId, function ($q) use ($kostId) {
                 $q->whereHas('room.kost', function ($sub) use ($kostId) {
                     $sub->where('kost_id', $kostId);
                 });
             })
-            ->with(['room.kost', 'payments'])
+            ->with(['room.kost'])
             ->get();
 
         $unpaidMembers = collect();
 
         foreach ($membersRaw as $member) {
             $kost = $member->room->kost ?? null;
-            if (!$kost) continue;
+            if (!$kost || !$member->move_out_date) continue;
 
-            $amountPerMonth = $kost->amount ?? 0;
-            $moveIn = Carbon::parse($member->move_in_date);
-            $moveInDay = $moveIn->day;
-            $moveInMonth = $moveIn->copy()->startOfMonth();
-            $currentMonth = $today->copy()->startOfMonth();
+            $moveOut = Carbon::parse($member->move_out_date);
+            if ($today->lte($moveOut)) continue;
 
-            $lastDueMonth = ($today->day < $moveInDay) ? $currentMonth->subMonth() : $currentMonth;
+            $moveOutMonth = $moveOut->copy()->startOfMonth();
+            $nowMonth = $today->copy()->startOfMonth();
 
-            $expectedMonths = collect();
-            $loop = $moveInMonth->copy();
-            while ($loop <= $lastDueMonth) {
-                $expectedMonths->push($loop->format('Y-m'));
-                $loop->addMonth();
+            $monthsUnpaid = $moveOutMonth->diffInMonths($nowMonth);
+            if ($today->gt($moveOut)) {
+                $monthsUnpaid += 1;
             }
 
-            $paidMonths = collect();
-            foreach ($member->payments as $payment) {
-                $start = Carbon::parse($payment->payment_date)->startOfMonth();
-                $months = match ($payment->duration) {
-                    'monthly' => 1,
-                    '6months' => 6,
-                    'yearly'  => 12,
-                    default   => 0,
-                };
-                for ($i = 0; $i < $months; $i++) {
-                    $paidMonths->push($start->copy()->addMonths($i)->format('Y-m'));
-                }
+            // Buat daftar bulan unpaid
+            $unpaidMonths = [];
+            $loop = $moveOutMonth->copy()->addMonth();
+            for ($i = 0; $i < $monthsUnpaid; $i++) {
+                $unpaidMonths[] = $loop->copy()->addMonths($i)->format('Y-m');
             }
 
-            $unpaidMonths = $expectedMonths->diff($paidMonths);
-            $totalUnpaid = $unpaidMonths->count() * $amountPerMonth;
+            $totalUnpaid = $monthsUnpaid * ($kost->amount ?? 0);
 
-            if ($totalUnpaid > 0) {
-                $unpaidMembers->push([
-                    'full_name'   => $member->full_name,
-                    'kost_name'   => $kost->kost_name ?? '-',
-                    'room_number' => $member->room->room_number ?? '-',
-                    'months'      => $unpaidMonths->count(),
-                    'amount'      => $totalUnpaid,
-                ]);
-            }
+            $unpaidMembers->push((object)[
+                'full_name'     => $member->full_name,
+                'room_number'   => $member->room->room_number ?? '-',
+                'kost_name'     => $kost->kost_name ?? '-',
+                'months_unpaid' => $monthsUnpaid,
+                'total_due'     => $totalUnpaid,
+                'unpaid_months' => $unpaidMonths,
+            ]);
         }
 
         // === Export to Excel ===
@@ -203,11 +155,11 @@ class UnpaidController extends Controller
         $no = 1;
         foreach ($unpaidMembers as $item) {
             $sheet->setCellValue('A' . $row, $no++);
-            $sheet->setCellValue('B' . $row, $item['full_name']);
-            $sheet->setCellValue('C' . $row, $item['kost_name']);
-            $sheet->setCellValue('D' . $row, $item['room_number']);
-            $sheet->setCellValue('E' . $row, $item['months']);
-            $sheet->setCellValue('F' . $row, number_format($item['amount'], 0, ',', '.'));
+            $sheet->setCellValue('B' . $row, $item->full_name);
+            $sheet->setCellValue('C' . $row, $item->kost_name);
+            $sheet->setCellValue('D' . $row, $item->room_number);
+            $sheet->setCellValue('E' . $row, $item->months_unpaid);
+            $sheet->setCellValue('F' . $row, number_format($item->total_due, 0, ',', '.'));
             $row++;
         }
 
