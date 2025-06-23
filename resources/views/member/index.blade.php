@@ -72,9 +72,6 @@
                                     <h6 class="fw-semibold mb-0">Move-in Date</h6>
                                 </th>
                                 <th class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">Move-out Date</h6>
-                                </th>
-                                <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0 text-center">Action</h6>
                                 </th>
                             </tr>
@@ -104,10 +101,7 @@
                                         <p class="fw-normal mb-0">{{ $member->room->room_number }}</p>
                                     </td>
                                     <td class="border-bottom-0">
-                                        <p class="fw-normal mb-0">{{ $member->move_in_date }}</p>
-                                    </td>
-                                    <td class="border-bottom-0">
-                                        <p class="fw-normal mb-0">{{ $member->move_out_date }}</p>
+                                        <p class="fw-normal mb-0">{{ \Carbon\Carbon::parse($member->move_in_date)->format('d M Y') }}</p>
                                     </td>
                                     <td class="border-bottom-0 text-center">
                                         <small>

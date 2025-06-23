@@ -53,11 +53,6 @@
                                 <input type="date" name="move_in_date" value="{{ $member->move_in_date }}"
                                     class="form-control" id="exampleInputmovein1" aria-describedby="moveinHelp" required>
                             </div>
-                            <div class="mb-3">
-                                <label for="exampleInputmoveout1" class="form-label">Move-out Date</label>
-                                <input type="date" name="move_out_date" value="{{ $member->move_out_date }}"
-                                    class="form-control" id="exampleInputmoveout1" aria-describedby="moveoutHelp">
-                            </div>
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>

@@ -88,6 +88,25 @@ class PaymentController extends Controller
 
     public function create(Request $request)
     {
+        // Ambil member dan tanggal masuknya
+        $member = Member::findOrFail($request->member_id);
+        $moveInDate = Carbon::parse($member->move_in_date);
+
+        // Hitung move_out_date berdasarkan durasi
+        switch ($request->duration) {
+            case 'monthly':
+                $moveOutDate = $moveInDate->copy()->addMonth();
+                break;
+            case '6months':
+                $moveOutDate = $moveInDate->copy()->addMonths(6);
+                break;
+            case 'yearly':
+                $moveOutDate = $moveInDate->copy()->addYear();
+                break;
+            default:
+                $moveOutDate = null;
+        }
+
         $request->validate([
             'member_id' => 'required|exists:tb_members,member_id',
             'payment_date' => 'required|date',
@@ -102,6 +121,12 @@ class PaymentController extends Controller
             'duration' => $request->duration,
             'amount' => $request->amount,
         ]);
+
+        // Update move_out_date otomatis
+        if ($moveOutDate) {
+            $member->move_out_date = $moveOutDate;
+            $member->save();
+        }
 
         return redirect()->route('payment')->with('success', 'Data has been added successfully');
     }
@@ -151,10 +176,11 @@ class PaymentController extends Controller
         $sheet->setCellValue('D1', 'Room');
         $sheet->setCellValue('E1', 'Period');
         $sheet->setCellValue('F1', 'Payment Date');
-        $sheet->setCellValue('G1', 'Amount');
+        $sheet->setCellValue('G1', 'Payment Expired');
+        $sheet->setCellValue('H1', 'Amount');
 
         // Bold header
-        $sheet->getStyle('A1:G1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:H1')->getFont()->setBold(true);
 
         // Fill data
         $row = 2;
@@ -182,7 +208,8 @@ class PaymentController extends Controller
 
             $sheet->setCellValue('E' . $row, $period);
             $sheet->setCellValue('F' . $row, Carbon::parse($item->payment_date)->format('d M Y'));
-            $sheet->setCellValue('G' . $row, number_format($item->amount, 0, ',', '.'));
+            $sheet->setCellValue('G' . $row, Carbon::parse($item->member->move_out_date)->format('d M Y'));
+            $sheet->setCellValue('H' . $row, number_format($item->amount, 0, ',', '.'));
 
             $row++;
         }

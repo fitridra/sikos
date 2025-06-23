@@ -118,8 +118,7 @@ class MemberController extends Controller
             'address' => 'nullable',
             'phone' => 'nullable',
             'room_id' => 'required',
-            'move_in_date' => 'required|date',
-            'move_out_date' => 'nullable|date|after_or_equal:move_in_date'
+            'move_in_date' => 'required|date'
         ]);
 
         // Update data member
@@ -128,7 +127,6 @@ class MemberController extends Controller
         $member->phone = $request->phone;
         $member->room_id = $request->room_id;
         $member->move_in_date = $request->move_in_date;
-        $member->move_out_date = $request->move_out_date;
         $member->save();
 
         // Handle update status room

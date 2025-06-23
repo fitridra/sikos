@@ -10,10 +10,12 @@ class PaymentSeeder extends Seeder
 {
     public function run()
     {
+        $today = Carbon::today();
+
         Payment::insert([
             [
                 'member_id'    => 1,
-                'payment_date' => '2025-01-10',
+                'payment_date' => $today->copy()->subMonth(),
                 'duration'     => 'monthly',
                 'amount'       => 1000000,
                 'created_at'   => now(),
@@ -21,7 +23,7 @@ class PaymentSeeder extends Seeder
             ],
             [
                 'member_id'    => 2,
-                'payment_date' => '2024-11-13',
+                'payment_date' => $today->copy()->subMonths(6),
                 'duration'     => '6months',
                 'amount'       => 6000000,
                 'created_at'   => now(),
@@ -29,7 +31,7 @@ class PaymentSeeder extends Seeder
             ],
             [
                 'member_id'    => 3,
-                'payment_date' => '2025-03-20',
+                'payment_date' => $today->copy()->subYear(),
                 'duration'     => 'yearly',
                 'amount'       => 14000000,
                 'created_at'   => now(),

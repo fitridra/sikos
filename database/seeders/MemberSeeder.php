@@ -11,14 +11,16 @@ class MemberSeeder extends Seeder
 {
     public function run(): void
     {
+        $today = Carbon::today();
+
         DB::table('tb_members')->insert([
             [
                 'full_name'     => 'Mawar Lestari',
                 'address'       => 'DKI Jakarta',
                 'phone'         => '081234567890',
                 'room_id'       => 2,
-                'move_in_date'  => Carbon::parse('2025-01-10'),
-                'move_out_date' => null,
+                'move_in_date'  => $today->copy()->subMonth(), // 1 bulan sebelumnya
+                'move_out_date' => $today,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],
@@ -27,8 +29,8 @@ class MemberSeeder extends Seeder
                 'address'       => 'Bekasi',
                 'phone'         => '081324567890',
                 'room_id'       => 1,
-                'move_in_date'  => Carbon::parse('2024-11-13'),
-                'move_out_date' => Carbon::parse('2025-05-15'),
+                'move_in_date'  => $today->copy()->subMonths(6), // 6 bulan sebelumnya
+                'move_out_date' => $today,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],
@@ -37,8 +39,8 @@ class MemberSeeder extends Seeder
                 'address'       => 'Tangerang',
                 'phone'         => '081543267890',
                 'room_id'       => 5,
-                'move_in_date'  => Carbon::parse('2025-03-20'),
-                'move_out_date' => null,
+                'move_in_date'  => $today->copy()->subYear(), // 1 tahun sebelumnya
+                'move_out_date' => $today,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],

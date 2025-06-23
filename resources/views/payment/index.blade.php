@@ -108,6 +108,9 @@
                                     <h6 class="fw-semibold mb-0">Payment Date</h6>
                                 </th>
                                 <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Payment Expired</h6>
+                                </th>
+                                <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">Amount</h6>
                                 </th>
                                 @if (Auth::check() && Auth::user()->username === 'superadmin')
@@ -158,6 +161,11 @@
                                     <td class="border-bottom-0">
                                         <p class="fw-normal mb-0">
                                             {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}
+                                        </p>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <p class="fw-normal mb-0">
+                                            {{ \Carbon\Carbon::parse($payment->member->move_out_date)->format('d M Y') }}
                                         </p>
                                     </td>
                                     <td class="border-bottom-0">
