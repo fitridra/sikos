@@ -56,7 +56,7 @@
                                 <div class="row alig n-items-start">
                                     <div class="col-8">
                                         <h5 class="card-title mb-9 fw-semibold"> Unpaid Rent </h5>
-                                        <h5 class="fw-semibold mb-3">Rp {{ number_format($totalUnpaid, 0, ',', '.') }}</h5>
+                                        <h5 class="fw-semibold mb-3">Rp {{ number_format($UnpaidDasboard, 0, ',', '.') }}</h5>
                                     </div>
                                     <div class="col-4">
                                         <div class="d-flex justify-content-end">
