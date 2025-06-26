@@ -14,6 +14,9 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::group(['middleware' => ['auth']], function() {
+    Route::get('/change-password', [UserController::class, 'edit'])->name('change_password');
+    Route::put('/change-password', [UserController::class, 'update']);
+
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/get-rooms/{kostId}', [MemberController::class, 'getRoomsByKost']);

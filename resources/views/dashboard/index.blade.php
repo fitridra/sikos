@@ -4,65 +4,74 @@
     <div class="container-fluid">
         <!--  Row 1 -->
         @if (Auth::check() && Auth::user()->username === 'superadmin')
-        <div class="row">
-            <div class="col-lg">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <!-- Annual Income -->
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row alig n-items-start">
-                                    <div class="col-8">
-                                        <h5 class="card-title mb-9 fw-semibold"> Annual Income </h5>
-                                        <h5 class="fw-semibold mb-3">Rp {{ number_format($annualIncome, 0, ',', '.') }}</h5>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="d-flex justify-content-end">
-                                            <div
-                                                class="text-white bg-primary rounded-circle p-6 d-flex align-items-center justify-content-center">
-                                                <i class="ti ti-currency-dollar fs-6"></i>
+            <div class="row">
+                <div class="col-lg">
+                    <div class="row">
+                        @if (session()->has('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        <div class="col-lg-4">
+                            <!-- Annual Income -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row alig n-items-start">
+                                        <div class="col-8">
+                                            <h5 class="card-title mb-9 fw-semibold"> Annual Income </h5>
+                                            <h5 class="fw-semibold mb-3">Rp {{ number_format($annualIncome, 0, ',', '.') }}
+                                            </h5>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="d-flex justify-content-end">
+                                                <div
+                                                    class="text-white bg-primary rounded-circle p-6 d-flex align-items-center justify-content-center">
+                                                    <i class="ti ti-currency-dollar fs-6"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <!-- Monthly Earnings -->
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row alig n-items-start">
-                                    <div class="col-8">
-                                        <h5 class="card-title mb-9 fw-semibold"> Monthly Earnings </h5>
-                                        <h5 class="fw-semibold mb-3">Rp {{ number_format($monthlyEarnings, 0, ',', '.') }}</h5>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="d-flex justify-content-end">
-                                            <div
-                                                class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
-                                                <i class="ti ti-currency-dollar fs-6"></i>
+                        <div class="col-lg-4">
+                            <!-- Monthly Earnings -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row alig n-items-start">
+                                        <div class="col-8">
+                                            <h5 class="card-title mb-9 fw-semibold"> Monthly Earnings </h5>
+                                            <h5 class="fw-semibold mb-3">Rp
+                                                {{ number_format($monthlyEarnings, 0, ',', '.') }}</h5>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="d-flex justify-content-end">
+                                                <div
+                                                    class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
+                                                    <i class="ti ti-currency-dollar fs-6"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <!-- Unpaid Rent -->
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row alig n-items-start">
-                                    <div class="col-8">
-                                        <h5 class="card-title mb-9 fw-semibold"> Unpaid Rent </h5>
-                                        <h5 class="fw-semibold mb-3">Rp {{ number_format($UnpaidDasboard, 0, ',', '.') }}</h5>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="d-flex justify-content-end">
-                                            <div
-                                                class="text-white bg-danger rounded-circle p-6 d-flex align-items-center justify-content-center">
-                                                <i class="ti ti-currency-dollar fs-6"></i>
+                        <div class="col-lg-4">
+                            <!-- Unpaid Rent -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row alig n-items-start">
+                                        <div class="col-8">
+                                            <h5 class="card-title mb-9 fw-semibold"> Unpaid Rent </h5>
+                                            <h5 class="fw-semibold mb-3">Rp
+                                                {{ number_format($UnpaidDasboard, 0, ',', '.') }}</h5>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="d-flex justify-content-end">
+                                                <div
+                                                    class="text-white bg-danger rounded-circle p-6 d-flex align-items-center justify-content-center">
+                                                    <i class="ti ti-currency-dollar fs-6"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -72,7 +81,6 @@
                     </div>
                 </div>
             </div>
-        </div>
         @endif
         <div class="row">
             <div class="col-lg-4 d-flex align-items-stretch">

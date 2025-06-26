@@ -23,6 +23,10 @@
                                 <i class="ti ti-user fs-6"></i>
                                 <p class="mb-0 fs-3" style="margin: 0;">{{ Auth::user()->name }}</p>
                             </div>
+                            <a href="{{ route('change_password') }}" class="d-flex align-items-center gap-2 dropdown-item">
+                                <i class="ti ti-key fs-6"></i>
+                                <p class="mb-0 fs-3">Change Your Password</p>
+                            </a>
                             <form method="POST" action="{{ route('logout') }}" class="mx-3 mt-2 d-block">
                                 @csrf
                                 <button type="submit" class="btn btn-outline-primary w-100">
