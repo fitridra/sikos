@@ -165,7 +165,7 @@
                                     </td>
                                     <td class="border-bottom-0">
                                         <p class="fw-normal mb-0">
-                                            {{ \Carbon\Carbon::parse($payment->member->move_out_date)->format('d M Y') }}
+                                            {{ \Carbon\Carbon::parse($payment->move_out_date)->format('d M Y') }}
                                         </p>
                                     </td>
                                     <td class="border-bottom-0">

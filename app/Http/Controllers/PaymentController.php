@@ -36,16 +36,12 @@ class PaymentController extends Controller
                 $query->whereMonth('payment_date', $request->filter_month);
             })
             ->with(['member.room.kost'])
-            ->orderBy('payment_date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         $data_payment->appends($request->only(['kost_id', 'cari', 'filter_year', 'filter_month']));
 
-        $all_members = Member::select('member_id', 'full_name')
-            ->where(function ($query) {
-                $query->whereNull('move_out_date')
-                    ->orWhereDate('move_out_date', '>', now());
-            })->get();
+        $all_members = Member::select('member_id', 'full_name')->get();
 
         $allkosts = Kost::select('kost_id', 'kost_name')->get();
 
@@ -88,25 +84,6 @@ class PaymentController extends Controller
 
     public function create(Request $request)
     {
-        // Ambil member dan tanggal masuknya
-        $member = Member::findOrFail($request->member_id);
-        $moveInDate = Carbon::parse($member->move_in_date);
-
-        // Hitung move_out_date berdasarkan durasi
-        switch ($request->duration) {
-            case 'monthly':
-                $moveOutDate = $moveInDate->copy()->addMonth();
-                break;
-            case '6months':
-                $moveOutDate = $moveInDate->copy()->addMonths(6);
-                break;
-            case 'yearly':
-                $moveOutDate = $moveInDate->copy()->addYear();
-                break;
-            default:
-                $moveOutDate = null;
-        }
-
         $request->validate([
             'member_id' => 'required|exists:tb_members,member_id',
             'payment_date' => 'required|date',
@@ -115,18 +92,42 @@ class PaymentController extends Controller
             'discount' => 'nullable|numeric|min:0',
         ]);
 
-        Payment::create([
-            'member_id' => $request->member_id,
-            'payment_date' => $request->payment_date,
-            'duration' => $request->duration,
-            'amount' => $request->amount,
-        ]);
+        // Ambil member
+        $member = Member::findOrFail($request->member_id);
 
-        // Update move_out_date otomatis
-        if ($moveOutDate) {
-            $member->move_out_date = $moveOutDate;
-            $member->save();
+        // Ambil payment terakhir member ini (kalau ada)
+        $lastPayment = Payment::where('member_id', $member->member_id)
+            ->orderByDesc('move_out_date')
+            ->first();
+
+        // Tentukan tanggal dasar: move_out terakhir atau move_in
+        $baseDate = $lastPayment && $lastPayment->move_out_date
+            ? Carbon::parse($lastPayment->move_out_date)
+            : Carbon::parse($member->move_in_date);
+
+        // Hitung move_out_date berdasarkan durasi
+        switch ($request->duration) {
+            case 'monthly':
+                $moveOutDate = $baseDate->copy()->addMonth();
+                break;
+            case '6months':
+                $moveOutDate = $baseDate->copy()->addMonths(6);
+                break;
+            case 'yearly':
+                $moveOutDate = $baseDate->copy()->addYear();
+                break;
+            default:
+                $moveOutDate = null;
         }
+
+        Payment::create([
+            'member_id'     => $request->member_id,
+            'payment_date'  => $request->payment_date,
+            'duration'      => $request->duration,
+            'amount'        => $request->amount,
+            'discount'      => $request->discount ?? 0,
+            'move_out_date' => $moveOutDate,
+        ]);
 
         return redirect()->route('payment')->with('success', 'Data has been added successfully');
     }
@@ -208,7 +209,7 @@ class PaymentController extends Controller
 
             $sheet->setCellValue('E' . $row, $period);
             $sheet->setCellValue('F' . $row, Carbon::parse($item->payment_date)->format('d M Y'));
-            $sheet->setCellValue('G' . $row, Carbon::parse($item->member->move_out_date)->format('d M Y'));
+            $sheet->setCellValue('G' . $row, Carbon::parse($item->move_out_date)->format('d M Y'));
             $sheet->setCellValue('H' . $row, number_format($item->amount, 0, ',', '.'));
 
             $row++;

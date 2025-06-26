@@ -20,7 +20,6 @@ class MemberSeeder extends Seeder
                 'phone'         => '081234567890',
                 'room_id'       => 2,
                 'move_in_date'  => $today->copy()->subMonth(), // 1 bulan sebelumnya
-                'move_out_date' => $today,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],
@@ -30,7 +29,6 @@ class MemberSeeder extends Seeder
                 'phone'         => '081324567890',
                 'room_id'       => 1,
                 'move_in_date'  => $today->copy()->subMonths(6), // 6 bulan sebelumnya
-                'move_out_date' => $today,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],
@@ -40,7 +38,6 @@ class MemberSeeder extends Seeder
                 'phone'         => '081543267890',
                 'room_id'       => 5,
                 'move_in_date'  => $today->copy()->subYear(), // 1 tahun sebelumnya
-                'move_out_date' => $today,
                 'created_at'    => now(),
                 'updated_at'    => now(),
             ],

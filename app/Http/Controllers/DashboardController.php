@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Payment;
-use App\Models\Member;
 
 class DashboardController extends Controller
 {
@@ -23,19 +22,22 @@ class DashboardController extends Controller
             ->sum('amount');
 
         // Ambil semua member aktif
-        $members = Member::whereDate('move_out_date', '<', $today)
-            ->with(['room.kost'])
-            ->get();
+        $members = Payment::with(['member.room.kost'])
+            ->get()
+            ->sortByDesc('move_out_date')
+            ->unique('member_id')
+            ->values();
 
         $totalUnpaid = 0;
         $unpaidMembers = collect();
 
-        foreach ($members as $member) {
+        foreach ($members as $payment) {
+            $member = $payment->member;
             $kost = $member->room->kost ?? null;
-            if (!$kost || !$member->move_out_date) continue;
+            if (!$kost || !$payment->move_out_date) continue;
 
-            $moveOut = Carbon::parse($member->move_out_date);
-            if ($today->lte($moveOut)) continue;
+            $moveOut = Carbon::parse($payment->move_out_date);
+            if ($moveOut->isSameDay($today) || $moveOut->gt($today)) continue;
 
             $moveOutMonth = $moveOut->copy()->startOfMonth();
             $nowMonth = $today->copy()->startOfMonth();
@@ -45,7 +47,6 @@ class DashboardController extends Controller
                 $monthsUnpaid += 1;
             }
 
-            // Buat daftar bulan unpaid
             $unpaidMonths = [];
             $loop = $moveOutMonth->copy()->addMonth();
             for ($i = 0; $i < $monthsUnpaid; $i++) {
@@ -54,8 +55,11 @@ class DashboardController extends Controller
 
             $totalUnpaid = $monthsUnpaid * ($kost->amount ?? 0);
 
+            if ($monthsUnpaid <= 0) continue;
+
             $unpaidMembers->push((object)[
                 'full_name'     => $member->full_name,
+                'tanggal' => $payment->move_out_date,
                 'room_number'   => $member->room->room_number ?? '-',
                 'kost_name'     => $kost->kost_name ?? '-',
                 'months_unpaid' => $monthsUnpaid,
@@ -80,13 +84,13 @@ class DashboardController extends Controller
                     'full_name'   => $payment->member->full_name,
                     'room_number' => $payment->member->room->room_number ?? '-',
                     'kost_name'   => $payment->member->room->kost->kost_name ?? '-',
-                    'payment_date'=> $payment->payment_date,
+                    'payment_date' => $payment->payment_date,
                     'amount'      => $payment->amount,
                     'created_at'  => $payment->created_at,
                     'updated_at'  => $payment->updated_at,
                 ];
             });
 
-        return view('dashboard.index', compact('UnpaidDasboard','monthlyEarnings', 'annualIncome', 'totalUnpaid', 'unpaidTop5', 'lastPayments'));
+        return view('dashboard.index', compact('UnpaidDasboard', 'monthlyEarnings', 'annualIncome', 'totalUnpaid', 'unpaidTop5', 'lastPayments'));
     }
 }

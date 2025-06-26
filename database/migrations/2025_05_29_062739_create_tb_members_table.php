@@ -19,7 +19,6 @@ return new class extends Migration
             $table->unsignedBigInteger('room_id');
             $table->foreign('room_id')->references('room_id')->on('tb_rooms')->onDelete('cascade');
             $table->date('move_in_date');
-            $table->date('move_out_date')->nullable();
             $table->timestamps();
         });
     }

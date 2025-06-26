@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('duration');
             $table->date('payment_date');
             $table->integer('amount');
+            $table->date('move_out_date')->nullable();
             $table->timestamps();
         });
     }

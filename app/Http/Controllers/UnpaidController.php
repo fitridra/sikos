@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Kost;
 use App\Models\Member;
+use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -17,23 +18,26 @@ class UnpaidController extends Controller
         $today = now();
         $kostId = $request->input('kost_id');
 
-        $membersRaw = Member::whereDate('move_out_date', '<', $today)
+        $membersRaw = Payment::with(['member.room.kost'])
             ->when($kostId, function ($q) use ($kostId) {
-                $q->whereHas('room.kost', function ($sub) use ($kostId) {
+                $q->whereHas('member.room.kost', function ($sub) use ($kostId) {
                     $sub->where('kost_id', $kostId);
                 });
             })
-            ->with(['room.kost'])
-            ->get();
+            ->get()
+            ->sortByDesc('move_out_date')
+            ->unique('member_id')
+            ->values();
 
         $unpaidMembers = collect();
 
-        foreach ($membersRaw as $member) {
+        foreach ($membersRaw as $payment) {
+            $member = $payment->member;
             $kost = $member->room->kost ?? null;
-            if (!$kost || !$member->move_out_date) continue;
+            if (!$kost || !$payment->move_out_date) continue;
 
-            $moveOut = Carbon::parse($member->move_out_date);
-            if ($today->lte($moveOut)) continue;
+            $moveOut = Carbon::parse($payment->move_out_date);
+            if ($moveOut->isSameDay($today) || $moveOut->gt($today)) continue;
 
             $moveOutMonth = $moveOut->copy()->startOfMonth();
             $nowMonth = $today->copy()->startOfMonth();
@@ -43,7 +47,6 @@ class UnpaidController extends Controller
                 $monthsUnpaid += 1;
             }
 
-            // Buat daftar bulan unpaid
             $unpaidMonths = [];
             $loop = $moveOutMonth->copy()->addMonth();
             for ($i = 0; $i < $monthsUnpaid; $i++) {
@@ -52,8 +55,11 @@ class UnpaidController extends Controller
 
             $totalUnpaid = $monthsUnpaid * ($kost->amount ?? 0);
 
+            if ($monthsUnpaid <= 0) continue;
+
             $unpaidMembers->push((object)[
                 'full_name'     => $member->full_name,
+                'tanggal' => $payment->move_out_date,
                 'room_number'   => $member->room->room_number ?? '-',
                 'kost_name'     => $kost->kost_name ?? '-',
                 'months_unpaid' => $monthsUnpaid,
@@ -90,23 +96,26 @@ class UnpaidController extends Controller
         $today = now();
         $kostId = $request->input('kost_id');
 
-        $membersRaw = Member::whereDate('move_out_date', '<', $today)
+        $membersRaw = Payment::with(['member.room.kost'])
             ->when($kostId, function ($q) use ($kostId) {
-                $q->whereHas('room.kost', function ($sub) use ($kostId) {
+                $q->whereHas('member.room.kost', function ($sub) use ($kostId) {
                     $sub->where('kost_id', $kostId);
                 });
             })
-            ->with(['room.kost'])
-            ->get();
+            ->get()
+            ->sortByDesc('move_out_date')
+            ->unique('member_id')
+            ->values();
 
         $unpaidMembers = collect();
 
-        foreach ($membersRaw as $member) {
+        foreach ($membersRaw as $payment) {
+            $member = $payment->member;
             $kost = $member->room->kost ?? null;
-            if (!$kost || !$member->move_out_date) continue;
+            if (!$kost || !$payment->move_out_date) continue;
 
-            $moveOut = Carbon::parse($member->move_out_date);
-            if ($today->lte($moveOut)) continue;
+            $moveOut = Carbon::parse($payment->move_out_date);
+            if ($moveOut->isSameDay($today) || $moveOut->gt($today)) continue;
 
             $moveOutMonth = $moveOut->copy()->startOfMonth();
             $nowMonth = $today->copy()->startOfMonth();
@@ -116,7 +125,6 @@ class UnpaidController extends Controller
                 $monthsUnpaid += 1;
             }
 
-            // Buat daftar bulan unpaid
             $unpaidMonths = [];
             $loop = $moveOutMonth->copy()->addMonth();
             for ($i = 0; $i < $monthsUnpaid; $i++) {
@@ -125,8 +133,11 @@ class UnpaidController extends Controller
 
             $totalUnpaid = $monthsUnpaid * ($kost->amount ?? 0);
 
+            if ($monthsUnpaid <= 0) continue;
+
             $unpaidMembers->push((object)[
                 'full_name'     => $member->full_name,
+                'tanggal' => $payment->move_out_date,
                 'room_number'   => $member->room->room_number ?? '-',
                 'kost_name'     => $kost->kost_name ?? '-',
                 'months_unpaid' => $monthsUnpaid,

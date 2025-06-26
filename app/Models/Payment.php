@@ -17,6 +17,7 @@ class Payment extends Model
         'payment_date',
         'duration',
         'amount',
+        'move_out_date'
     ];
 
     public function member()

@@ -18,7 +18,6 @@ class Member extends Model
         'phone',
         'room_id',
         'move_in_date',
-        'move_out_date',
     ];
 
     public function room()
