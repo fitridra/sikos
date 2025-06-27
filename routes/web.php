@@ -8,6 +8,7 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UnpaidController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SpendingController;
 
 Route::get('/login', [UserController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [UserController::class, 'login']);
@@ -48,4 +49,11 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/unpaid', [UnpaidController::class, 'index'])->name('unpaid');
     Route::get('/export-unpaid-excel', [UnpaidController::class, 'exportExcel'])->name('unpaid.export.excel');
+
+    Route::get('/spending', [SpendingController::class, 'index'])->name('spending');
+    Route::post('/spending/create', [SpendingController::class, 'create'])->name('spending.create');
+    Route::get('/spending/edit/{id}', [SpendingController::class, 'edit'])->name('spending.edit');
+    Route::post('/spending/{id}', [SpendingController::class, 'update'])->name('spending.update');
+    Route::get('/spending/delete/{id}', [SpendingController::class, 'delete'])->name('spending.delete');
+
 });

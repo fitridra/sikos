@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Payment;
+use App\Models\Spending;
 
 class DashboardController extends Controller
 {
@@ -15,6 +16,11 @@ class DashboardController extends Controller
         // 1. Jumlah Pendapatan Bulan Ini (berdasarkan payment_date)
         $monthlyEarnings = Payment::whereMonth('payment_date', $today->month)
             ->whereYear('payment_date', $today->year)
+            ->sum('amount');
+
+        // Jumlah Pengeluaran Bulan Ini (berdasarkan spending_date)
+        $monthlySpending = Spending::whereMonth('spending_date', $today->month)
+            ->whereYear('spending_date', $today->year)
             ->sum('amount');
 
         // 2. Jumlah Pendapatan Tahun Ini
@@ -76,7 +82,7 @@ class DashboardController extends Controller
 
         // 5. 5 Terakhir melakukan payment
         $lastPayments = Payment::with('member.room.kost')
-            ->orderByDesc('payment_date')
+            ->orderByDesc('created_at')
             ->take(5)
             ->get()
             ->map(function ($payment) {
@@ -91,6 +97,6 @@ class DashboardController extends Controller
                 ];
             });
 
-        return view('dashboard.index', compact('UnpaidDasboard', 'monthlyEarnings', 'annualIncome', 'totalUnpaid', 'unpaidTop5', 'lastPayments'));
+        return view('dashboard.index', compact('monthlySpending', 'UnpaidDasboard', 'monthlyEarnings', 'annualIncome', 'totalUnpaid', 'unpaidTop5', 'lastPayments'));
     }
 }

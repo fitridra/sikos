@@ -22,4 +22,9 @@ class Kost extends Model
     {
         return $this->hasMany(Room::class, 'kost_id', 'kost_id');
     }
+
+    public function spendings()
+    {
+        return $this->hasMany(Spending::class, 'kost_id', 'kost_id');
+    }
 }

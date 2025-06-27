@@ -12,7 +12,7 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             <!-- Annual Income -->
                             <div class="card">
                                 <div class="card-body">
@@ -34,7 +34,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             <!-- Monthly Earnings -->
                             <div class="card">
                                 <div class="card-body">
@@ -56,7 +56,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             <!-- Unpaid Rent -->
                             <div class="card">
                                 <div class="card-body">
@@ -70,6 +70,28 @@
                                             <div class="d-flex justify-content-end">
                                                 <div
                                                     class="text-white bg-danger rounded-circle p-6 d-flex align-items-center justify-content-center">
+                                                    <i class="ti ti-currency-dollar fs-6"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <!-- Monthly Spending -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row alig n-items-start">
+                                        <div class="col-8">
+                                            <h5 class="card-title mb-9 fw-semibold"> Monthly Spending </h5>
+                                            <h5 class="fw-semibold mb-3">Rp
+                                                {{ number_format($monthlySpending, 0, ',', '.') }}</h5>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="d-flex justify-content-end">
+                                                <div
+                                                    class="text-white bg-warning rounded-circle p-6 d-flex align-items-center justify-content-center">
                                                     <i class="ti ti-currency-dollar fs-6"></i>
                                                 </div>
                                             </div>
@@ -93,7 +115,8 @@
                             @forelse ($lastPayments as $payment)
                                 <li class="timeline-item d-flex position-relative overflow-hidden">
                                     <div class="timeline-time text-dark flex-shrink-0 text-end">
-                                        {{ \Carbon\Carbon::parse($payment->updated_at ?? $payment->created_at)->format('H:i') }}
+                                        @php $time = \Carbon\Carbon::parse($payment->updated_at ?? $payment->created_at); @endphp
+                                        <sup style="font-size: 0.6em;">{{ $time->format('d/m') }}</sup> {{ $time->format('H:i') }}
                                     </div>
                                     <div class="timeline-badge-wrap d-flex flex-column align-items-center">
                                         <span
@@ -103,7 +126,7 @@
                                         @endunless
                                     </div>
                                     <div class="timeline-desc fs-3 text-dark mt-n1">
-                                        <b>{{ $payment->full_name }}</b>
+                                        <b>{{ $payment->full_name }}</b><br>
                                         {{ number_format($payment->amount, 0, ',', '.') }}
                                     </div>
                                 </li>

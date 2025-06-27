@@ -74,6 +74,15 @@
                         <span class="hide-menu">Unpaid</span>
                     </a>
                 </li>
+                <li class="sidebar-item {{ request()->routeIs('spending*') ? 'selected' : '' }}">
+                    <a class="sidebar-link {{ request()->routeIs('spending*') ? 'active' : '' }}"
+                        href="{{ route('spending') }}" aria-expanded="false">
+                        <span>
+                            <i class="ti ti-eraser"></i>
+                        </span>
+                        <span class="hide-menu">Spending</span>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- End Sidebar navigation -->
