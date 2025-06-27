@@ -242,7 +242,7 @@
                                 @csrf
                                 <div class="mb-3">
                                     <label for="member_id" class="form-label">Full Name</label>
-                                    <select name="member_id" id="member_id" class="form-select" required>
+                                    <select name="member_id" id="member_id" required>
                                         <option value="" disabled selected>-- Select Member --</option>
                                         @foreach ($all_members as $member)
                                             <option value="{{ $member->member_id }}"
@@ -303,6 +303,24 @@
     </div>
 @endsection
 @section('scripts_content')
+    <script>
+        const select = new TomSelect('#member_id', {
+            create: false,
+            maxItems: 1,
+            onItemAdd: function() {
+                this.control_input.disabled = true; // setelah pilih, disable input
+            },
+            onItemRemove: function() {
+                this.control_input.disabled = false; // kalau dihapus, bisa ketik lagi
+            },
+            onDropdownOpen: function() {
+                if (this.items.length > 0) {
+                    this.clear(); // hapus pilihan saat dropdown dibuka
+                    this.control_input.disabled = false; // aktifkan input lagi
+                }
+            }
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const memberSelect = document.querySelector('select[name="member_id"]');
