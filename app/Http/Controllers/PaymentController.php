@@ -68,6 +68,9 @@ class PaymentController extends Controller
             case '6months':
                 $multiplier = 6;
                 break;
+            case '3months':
+                $multiplier = 3;
+                break;
             case 'monthly':
             default:
                 $multiplier = 1;
@@ -88,7 +91,7 @@ class PaymentController extends Controller
             'member_id' => 'required|exists:tb_members,member_id',
             'payment_date' => 'required|date',
             'amount' => 'required|numeric',
-            'duration' => 'required|in:monthly,6months,yearly',
+            'duration' => 'required|in:monthly,3months,6months,yearly',
             'discount' => 'nullable|numeric|min:0',
         ]);
 
@@ -109,6 +112,9 @@ class PaymentController extends Controller
         switch ($request->duration) {
             case 'monthly':
                 $moveOutDate = $baseDate->copy()->addMonth();
+                break;
+            case '3months':
+                $moveOutDate = $baseDate->copy()->addMonths(3);
                 break;
             case '6months':
                 $moveOutDate = $baseDate->copy()->addMonths(6);
@@ -196,6 +202,9 @@ class PaymentController extends Controller
             switch ($item->duration) {
                 case 'monthly':
                     $period = 'Monthly';
+                    break;
+                case '3months':
+                    $period = '3 Months';
                     break;
                 case '6months':
                     $period = '6 Months';

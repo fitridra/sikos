@@ -145,6 +145,10 @@
                                                     Monthly
                                                 @break
 
+                                                @case('3months')
+                                                    3 Months
+                                                @break
+
                                                 @case('6months')
                                                     6 Months
                                                 @break
@@ -270,6 +274,8 @@
                                     <select name="duration" id="duration" class="form-select" required>
                                         <option value="monthly" {{ old('duration') == 'monthly' ? 'selected' : '' }}>
                                             Monthly</option>
+                                        <option value="3months" {{ old('duration') == '3months' ? 'selected' : '' }}>3
+                                            Months</option>
                                         <option value="6months" {{ old('duration') == '6months' ? 'selected' : '' }}>6
                                             Months</option>
                                         <option value="yearly" {{ old('duration') == 'yearly' ? 'selected' : '' }}>Yearly
