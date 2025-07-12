@@ -138,6 +138,23 @@ class PaymentController extends Controller
         return redirect()->route('payment')->with('success', 'Data has been added successfully');
     }
 
+    public function edit($id)
+    {
+        $payment = Payment::where('payment_id', $id)->first();
+        return view('payment/edit', compact('payment'));
+    }
+
+    public function update(Request $request, $id)
+    {
+
+        $payment = Payment::where('payment_id', $id)->first();
+        $payment->where('payment_id', $payment->payment_id)
+            ->update([
+                'payment_date' => $request->input('payment_date')
+            ]);
+        return redirect()->route('payment')->with('success', 'Data has been updated successfully');
+    }
+
     public function delete($id)
     {
         Payment::where('payment_id', $id)->delete();

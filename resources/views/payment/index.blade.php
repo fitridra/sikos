@@ -178,6 +178,10 @@
                                     @if (Auth::check() && Auth::user()->username === 'superadmin')
                                         <td class="border-bottom-0 text-center">
                                             <small>
+                                                <a href="{{ route('payment.edit', $payment->payment_id) }}" type="button"
+                                                    class="btn btn-warning">
+                                                    <i class="ti ti-edit"></i>
+                                                </a>
                                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                                     data-bs-target="#confirmDeleteModal{{ $payment->payment_id }}">
                                                     <i class="ti ti-trash"></i>

@@ -44,6 +44,8 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/payment', [PaymentController::class, 'index'])->name('payment');
     Route::post('/payment/create', [PaymentController::class, 'create'])->name('payment.create');
+    Route::get('/payment/edit/{id}', [PaymentController::class, 'edit'])->name('payment.edit');
+    Route::post('/payment/{id}', [PaymentController::class, 'update'])->name('payment.update');
     Route::get('/payment/{id}', [PaymentController::class, 'delete'])->name('payment.delete');
     Route::get('/export-payment-excel', [PaymentController::class, 'exportPaymentExcel'])->name('payment.export.excel');
 
